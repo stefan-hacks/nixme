@@ -64,6 +64,8 @@
     allowedUDPPorts = [
       # mDNS for local service discovery
       5353
+      # DNS resolution (required for systemd-resolved)
+      53
     ];
     
     # Allow ping
