@@ -18,24 +18,24 @@
   # GPU/CUDA CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
   services.xserver.videoDrivers = lib.mkForce [ "nvidia" ];
-  
+    
   hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-  
-  hardware.opengl = {
-    enable = true;
-    # Note: driSupport removed in NixOS 26.05 - now automatic
-    extraPackages = with pkgs; [
-      cudaPackages.cuda_nvml_dev
-      cudaPackages.cuda_cudart
-      linuxPackages.nvidia_x11
-    ];
+    
+  # Note: hardware.opengl renamed to hardware.graphics in NixOS 26.05
+  hardware.graphics = {
+      enable = true;
+      extraPackages = with pkgs; [
+          cudaPackages.cuda_nvml_dev
+          cudaPackages.cuda_cudart
+          linuxPackages.nvidia_x11
+      ];
   };
   
   # ═══════════════════════════════════════════════════════════════════════════
