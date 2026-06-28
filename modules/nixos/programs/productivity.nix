@@ -22,6 +22,6 @@
     
     # Time management
     gnome-calendar
-    gnome-todo
+    # Note: gnome-todo removed - package no longer exists in nixpkgs
   ];
 }
