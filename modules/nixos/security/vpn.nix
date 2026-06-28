@@ -11,7 +11,8 @@
     
     # Network tools
     networkmanager-openvpn
-    networkmanager-wireguard
+    # Note: networkmanager-wireguard plugin removed - WireGuard support 
+    # is now built into NetworkManager itself in recent versions
   ];
   
   # WireGuard kernel module
