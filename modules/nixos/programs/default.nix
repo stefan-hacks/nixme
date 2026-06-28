@@ -27,7 +27,7 @@
     VISUAL = "nvim";
     PAGER = "less";
     LESS = "-R";
-    LANG = "en_US.UTF-8";
-    LC_ALL = "en_US.UTF-8";
+    # Note: LANG/LC_ALL are set by i18n module via defaultLocale
+    # in modules/nixos/core/locale.nix (currently en_AU.UTF-8)
   };
 }
