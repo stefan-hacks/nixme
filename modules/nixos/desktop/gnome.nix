@@ -92,10 +92,13 @@
     xdg-desktop-portal-gnome
     
     # Fonts
+    # Note: noto-fonts-cjk was split into separate sans/serif packages in NixOS 26.05+
+    # Using both for complete CJK font coverage (Chinese, Japanese, Korean)
     dejavu_fonts
     liberation_ttf
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
     noto-fonts-emoji
     font-awesome
     
@@ -110,7 +113,10 @@
       dejavu_fonts
       liberation_ttf
       noto-fonts
-      noto-fonts-cjk
+      # Note: noto-fonts-cjk split into sans/serif variants in NixOS 26.05+
+      # These provide CJK (Chinese, Japanese, Korean) font support
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
       noto-fonts-emoji
       font-awesome
       fira-code
