@@ -92,14 +92,12 @@
     xdg-desktop-portal-gnome
     
     # Fonts
-    # Note: noto-fonts-cjk was split into separate sans/serif packages in NixOS 26.05+
-    # Using both for complete CJK font coverage (Chinese, Japanese, Korean)
+    # Fonts (also in fonts.packages below - kept here for backwards compatibility)
     dejavu_fonts
     liberation_ttf
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
-    # Note: noto-fonts-emoji renamed to noto-fonts-color-emoji in NixOS 26.05
     noto-fonts-color-emoji
     font-awesome
     
@@ -121,22 +119,22 @@
       # Note: noto-fonts-emoji renamed to noto-fonts-color-emoji in NixOS 26.05
       noto-fonts-color-emoji
       font-awesome
-      fira-code
-      fira-code-symbols
-      jetbrains-mono
-      # Install ALL Nerd Font sets
-      # Includes icons/glyphs for terminals, code editors, and development tools
-      # Full list: https://www.nerdfonts.com/font-downloads
-      # Note: nerdfonts must use override form in NixOS 26.05
-      # Using all available fonts from the nerdfonts package
-      (nerdfonts.override { fonts = nerdfonts.fonts; })
+      # Nerd Fonts - Modern icon/glyph fonts for terminals and editors
+      # Note: nerdfonts package was removed in NixOS 26.05, now using individual packages
+      # These include the base fonts + extra icons/glyphs for Powerline, Devicons, etc.
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.hack
+      nerd-fonts.fira-code
+      nerd-fonts.iosevka
+      nerd-fonts.symbols-only
     ];
     
     fontconfig = {
       defaultFonts = {
+        # Note: Nerd Font names include "Nerd Font" suffix (e.g., "JetBrainsMono Nerd Font")
         serif = [ "Noto Serif" "DejaVu Serif" ];
         sansSerif = [ "Noto Sans" "DejaVu Sans" ];
-        monospace = [ "JetBrains Mono" "Fira Code" "DejaVu Sans Mono" ];
+        monospace = [ "JetBrainsMono Nerd Font" "FiraCode Nerd Font" "DejaVu Sans Mono" ];
         emoji = [ "Noto Color Emoji" ];
       };
     };
