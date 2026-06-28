@@ -12,7 +12,8 @@
   # ═══════════════════════════════════════════════════════════════════════════
   # SYSTEM-WIDE SHELL CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
-  programs.zsh.enable = true;
+  # Bash is the default system shell
+  programs.bash.enable = true;
 
   # ═══════════════════════════════════════════════════════════════════════════
   # USER GROUPS
@@ -45,8 +46,8 @@
         "power"           # Power management
       ];
       
-      # Use Zsh as default shell
-      shell = pkgs.zsh;
+      # Use Bash as default shell
+      shell = pkgs.bash;
       
       # SSH authorized keys (from const)
       openssh.authorizedKeys.keys = [

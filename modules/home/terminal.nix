@@ -136,11 +136,12 @@
   programs.zellij = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    # Zsh disabled - using bash as default shell
+    enableZshIntegration = false;
     
     settings = {
       theme = "catppuccin-mocha";
-      default_shell = "zsh";
+      default_shell = "bash";
       
       ui = {
         pane_frames = true;

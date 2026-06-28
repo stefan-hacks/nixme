@@ -69,7 +69,8 @@
   programs.starship = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    # Zsh disabled - using bash as default shell
+    enableZshIntegration = false;
     
     settings = {
       add_newline = false;
@@ -118,7 +119,8 @@
   programs.atuin = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    # Zsh disabled - using bash as default shell
+    enableZshIntegration = false;
     
     settings = {
       sync.enabled = false;
@@ -134,7 +136,8 @@
   programs.zoxide = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    # Zsh disabled - using bash as default shell
+    enableZshIntegration = false;
     options = [ "--cmd cd" ];
   };
   
@@ -144,13 +147,18 @@
   programs.direnv = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = true;
+    # Zsh disabled - using bash as default shell
+    enableZshIntegration = false;
     nix-direnv.enable = true;
   };
   
   # ═══════════════════════════════════════════════════════════════════════════
-  # ZSH - Z shell (optional, if you prefer zsh)
+  # ZSH - Z shell configuration (currently disabled, using bash)
   # ═══════════════════════════════════════════════════════════════════════════
+  # To enable zsh, change the user shell in modules/nixos/core/users.nix
+  # and uncomment the configuration below.
+  # ═══════════════════════════════════════════════════════════════════════════
+  /*
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -182,6 +190,8 @@
       SAVEHIST=100000
     '';
   };
+  */
+  
   
   # ═══════════════════════════════════════════════════════════════════════════
   # BASE PACKAGES
