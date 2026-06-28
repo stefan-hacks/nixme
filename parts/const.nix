@@ -22,9 +22,6 @@
 {lib, ...}: let
   inherit (builtins) elem;
   inherit (lib.attrsets) filterAttrs;
-  
-  # Helper to filter attribute lists
-  filterAttrsList = inp: white_list: (filterAttrs (x: elem white_list x) inp);
 in {
   flake = {
     # ═══════════════════════════════════════════════════════════════════════════
@@ -42,7 +39,7 @@ in {
         };
 
         # Host SSH public keys (for host-based authentication and known_hosts)
-        hosts = {
+        hostKeys = {
           ghost = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@ghost";
           kali-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@kali-vm";
           debian-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@debian-vm";
@@ -51,9 +48,10 @@ in {
         };
 
         # Host groupings for easy reference
-        all-hosts = filterAttrsList hosts [];
-        vms = filterAttrsList hosts ["kali-vm" "debian-vm" "fedora-vm"];
-        physical = filterAttrsList hosts ["ghost"];
+        # Usage: const.keys.all-hosts, const.keys.vms, const.keys.physical
+        all-hosts = hostKeys;
+        vms = filterAttrs (name: _: elem name ["kali-vm" "debian-vm" "fedora-vm"]) hostKeys;
+        physical = filterAttrs (name: _: elem name ["ghost"]) hostKeys;
       };
 
       # ─────────────────────────────────────────────────────────────────────────
