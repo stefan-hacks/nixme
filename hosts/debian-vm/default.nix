@@ -1,6 +1,12 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # HOSTS/DEBIAN-VM/DEFAULT.NIX - Debian VM Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
+#
+# Debian VM using standard GNOME desktop (same as ghost).
+# Previously had XFCE for lighter resource usage, but now standardized
+# on GNOME across all hosts for consistency.
+#
+# ═══════════════════════════════════════════════════════════════════════════════
 
 { config, pkgs, lib, ... }: {
   imports = [ ./hardware.nix ];
@@ -10,16 +16,7 @@
   
   boot.loader.grub.device = "/dev/vda";
   
-  # Development VM - lighter desktop
-  # Note: services.xserver.desktopManager.gnome renamed to services.desktopManager.gnome in NixOS 26.05
-  services.desktopManager.gnome.enable = lib.mkForce false;
-  services.desktopManager.xfce.enable = true;
-  services.displayManager.defaultSession = "xfce";
-  
-  environment.systemPackages = with pkgs; [
-    xfce.thunar
-    xfce.xfce4-terminal
-    xfce.xfce4-panel
-    xfce.xfce4-session
-  ];
+  # Note: Desktop environment is configured in modules/nixos/desktop/gnome.nix
+  # which is imported by all hosts through modules/nixos/default.nix
+  # This provides consistent GNOME experience across all hosts.
 }
