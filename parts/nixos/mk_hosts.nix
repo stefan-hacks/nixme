@@ -122,6 +122,13 @@ in rec {
           specialArgs = extraArgs;
           
           modules = [
+            # Import nixosModules.readOnlyPkgs to properly handle specialArgs.pkgs
+            # This allows nixpkgs.config options to work even when using custom pkgs
+            inputs.nixpkgs.nixosModules.readOnlyPkgs
+            
+            # Allow unfree packages (Discord, etc.)
+            { nixpkgs.config.allowUnfree = true; }
+            
             # System metadata
             {
               networking.hostName = name;
