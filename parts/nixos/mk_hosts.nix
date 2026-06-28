@@ -129,7 +129,9 @@ in rec {
             # System metadata
             {
               networking.hostName = name;
-              system.stateVersion = inputs.self.const.host-metadata.${name}.stateVersion or "26.05";
+              # const is now passed via _module.args, but we need it here in the flake
+              # Accessing via specialArgs or importing the const module directly
+              system.stateVersion = "26.05";
             }
             
             # NixOS modules (using self.outPath for absolute path)
