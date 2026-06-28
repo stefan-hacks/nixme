@@ -90,26 +90,26 @@
     zathura
     
     # System utilities
-    gnome.gnome-system-monitor
+    gnome-system-monitor
     gnome-calculator
     gnome-calendar
     # Note: gnome-todo removed - package no longer exists
-    gnome.gnome-screenshot
-    gnome.gnome-connections
+    gnome-screenshot
+    gnome-connections
     
     # Settings
-    gnome.gnome-settings-daemon
-    gnome.gnome-tweaks
-    gnome.dconf-editor
+    gnome-settings-daemon
+    gnome-tweaks
+    dconf-editor
     
     # Extensions
-    gnome.gnome-shell-extensions
+    gnome-shell-extensions
     gnome-extension-manager
-    gnomeExtensions.appindicator
-    gnomeExtensions.caffeine
-    gnomeExtensions.clipboard-indicator
-    gnomeExtensions.dash-to-dock
-    gnomeExtensions.user-themes
+    gnome-shell-extensions.appindicator
+    gnome-shell-extensions.caffeine
+    gnome-shell-extensions.clipboard-indicator
+    gnome-shell-extensions.dash-to-dock
+    gnome-shell-extensions.user-themes
   ];
   
   # ═══════════════════════════════════════════════════════════════════════════

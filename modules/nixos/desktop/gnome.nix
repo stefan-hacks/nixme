@@ -76,12 +76,12 @@
 
   # System packages for desktop
   environment.systemPackages = with pkgs; [
-    # GNOME utilities
-    gnome.adwaita-icon-theme
-    gnome.gnome-settings-daemon
-    gnome.gnome-screenshot
-    gnome.gnome-tweaks
-    gnome.dconf-editor
+    # GNOME packages
+    adwaita-icon-theme
+    gnome-settings-daemon
+    gnome-screenshot
+    gnome-tweaks
+    gnome-shell-extensions
     
     # Desktop utilities
     glib              # gsettings
