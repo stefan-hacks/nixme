@@ -35,10 +35,10 @@ in rec {
       }
       
       # Common home modules
-      ../../modules/home
+      "${self.outPath}/modules/home"
       
       # Host-specific home configuration if it exists
-      "../../hosts/${hostname}/home.nix"
+      "${self.outPath}/hosts/${hostname}/home.nix"
     ];
 
     # Let Home Manager manage itself
@@ -49,7 +49,7 @@ in rec {
   # GETUSERNAMES - Discovers users from the host's users/ directory
   # ═══════════════════════════════════════════════════════════════════════════
   getUserNames = hostname: let
-    hostDir = "../../hosts/${hostname}";
+    hostDir = "${self.outPath}/hosts/${hostname}";
     hasUsers = builtins.pathExists "${hostDir}/users";
   in
     if !hasUsers
@@ -128,16 +128,16 @@ in rec {
               system.stateVersion = inputs.self.const.host-metadata.${name}.stateVersion or "26.05";
             }
             
-            # NixOS modules
-            ../../modules/nixos
+            # NixOS modules (using self.outPath for absolute path)
+            "${self.outPath}/modules/nixos"
             
-            # Host-specific configuration
-            "../../hosts/${name}"
+            # Host-specific configuration (using self.outPath for absolute path)
+            "${self.outPath}/hosts/${name}"
             
             # Disko (optional)
           ] ++ (mkListIf disko [
             inputs.disko.nixosModules.default
-            "../../hosts/${name}/disko.nix"
+            "${self.outPath}/hosts/${name}/disko.nix"
           ]) ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
             hostname = name;
