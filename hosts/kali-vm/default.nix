@@ -59,14 +59,15 @@
     # Note: wifite renamed to wifite2 in NixOS 26.05
     aircrack-ng
     wifite2
-    # Note: reaverwps renamed to reaver in NixOS 26.05
-    reaver
+    # Note: reaverwps is correct (verified on search.nixos.org)
+    reaverwps
     
     # Password
-    # Note: john package is now john-jumbo (Jumbo patch version)
-    john-jumbo
+    # Note: john is correct (verified on search.nixos.org, already Jumbo version)
+    john
     hashcat
-    # Note: hydra may be thc-hydra in some versions
+    # Note: thc-hydra is correct for THC Hydra password cracker
+    # (the 'hydra' package is the Nix CI system, not the password tool)
     thc-hydra
     
     # Recon
@@ -74,17 +75,14 @@
     theharvester
     recon-ng
     amass
-    # Note: sublist3r may need to be python3Packages.sublist3r or similar
     sublist3r
     
     # OSINT
-    # Note: maltego is available as maltego package
     maltego
     
     # Utilities
     binwalk
     foremost
-    # Note: steghide may not be available; steghide is the standard name
     steghide
   ];
   
