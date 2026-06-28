@@ -44,7 +44,8 @@
   environment.systemPackages = with pkgs; [
     # Python ML stack
     python3
-    python3Packages.pytorch
+    # Note: pytorch renamed to torch in NixOS 26.05
+    python3Packages.torch
     python3Packages.tensorflow
     python3Packages.keras
     python3Packages.scikit-learn
