@@ -53,9 +53,6 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Q6Y7P+qdduC9VG2jyLqX4=7h5m="
       ];
       
-      # Allow unfree packages
-      allowUnfree = true;
-      
       # Trusted users (can add binary caches)
       trusted-users = [ "root" "@wheel" ];
     };

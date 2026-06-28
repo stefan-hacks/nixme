@@ -124,15 +124,9 @@ in rec {
           specialArgs = extraArgs;
           
           modules = [
-            # Allow unfree packages (Discord, etc.)
-            # nixosSystem constructs pkgs with this config automatically
-            { nixpkgs.config.allowUnfree = true; }
-            
             # System metadata
             {
               networking.hostName = name;
-              # const is now passed via _module.args, but we need it here in the flake
-              # Accessing via specialArgs or importing the const module directly
               system.stateVersion = "26.05";
             }
             
