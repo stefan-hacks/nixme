@@ -33,6 +33,11 @@
     fedora-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@fedora-vm";
     lin-ai = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@lin-ai";
   };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # USER CONFIGURATION - Primary user for all hosts
+  # ═══════════════════════════════════════════════════════════════════════════
+  primaryUser = "stefan-hacks";
 in {
   flake = {
     # ═══════════════════════════════════════════════════════════════════════════
@@ -104,7 +109,7 @@ in {
       # USER CONFIGURATION
       # ─────────────────────────────────────────────────────────────────────────
       users = {
-        primary = "stefan-hacks";
+        primary = primaryUser;
         admin = "lin";
       };
 
@@ -116,31 +121,31 @@ in {
           description = "Primary laptop - Lenovo ThinkPad P1 Gen 4";
           system = "x86_64-linux";
           stateVersion = "26.05";
-          primary-user = users.primary;
+          primary-user = primaryUser;
         };
         kali-vm = {
           description = "Kali Linux VM for penetration testing";
           system = "x86_64-linux";
           stateVersion = "26.05";
-          primary-user = users.primary;
+          primary-user = primaryUser;
         };
         debian-vm = {
           description = "Debian VM for development";
           system = "x86_64-linux";
           stateVersion = "26.05";
-          primary-user = users.primary;
+          primary-user = primaryUser;
         };
         fedora-vm = {
           description = "Fedora VM for testing";
           system = "x86_64-linux";
           stateVersion = "26.05";
-          primary-user = users.primary;
+          primary-user = primaryUser;
         };
         lin-ai = {
           description = "AI/ML workstation";
           system = "x86_64-linux";
           stateVersion = "26.05";
-          primary-user = users.primary;
+          primary-user = primaryUser;
         };
       };
     };
