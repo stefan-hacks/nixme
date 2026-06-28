@@ -102,27 +102,50 @@
     gnome-tweaks
     dconf-editor
     
-    # Extensions
-    gnome-shell-extensions
+    # ═══════════════════════════════════════════════════════════════════════════
+    # GNOME EXTENSIONS - For Ghost Host / stefan-hacks
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Extension Manager GUI tool
     gnome-extension-manager
-    gnome-shell-extensions.appindicator
-    gnome-shell-extensions.caffeine
-    gnome-shell-extensions.clipboard-indicator
-    gnome-shell-extensions.dash-to-dock
-    gnome-shell-extensions.user-themes
+    
+    # Base extensions package
+    gnome-shell-extensions
+    
+    # Individual extensions from pkgs.gnomeExtensions
+    gnomeExtensions.appindicator
+    gnomeExtensions.open-bar
+    gnomeExtensions.arcmenu
+    gnomeExtensions.blur-my-shell
+    gnomeExtensions.dynamic-music-pill
+    gnomeExtensions.modern-clock
+    gnomeExtensions.notification-configurator
+    gnomeExtensions.quake-terminal
+    gnomeExtensions.quick-settings-audio-panel
+    gnomeExtensions.steal-my-focus-window
+    gnomeExtensions.user-themes
+    gnomeExtensions.vitals-widget
+    gnomeExtensions.wallpicker
   ];
   
   # ═══════════════════════════════════════════════════════════════════════════
-  # GNOME EXTENSIONS
+  # ENABLE GNOME EXTENSIONS (UUIDs for extension-manager to activate)
   # ═══════════════════════════════════════════════════════════════════════════
+  # These are the extension UUIDs that will be enabled by default
   home.file = {
-    # Ensure extensions are enabled
-    ".config/gnome-extensions".text = ''
-      dash-to-dock
-      appindicator
-      caffeine
-      clipboard-indicator
-      user-themes
+    ".config/gnome-extensions/enabled".text = ''
+      appindicator@kavisouza.me
+      openbar@kali.team
+      arcmenu@arcmenu.com
+      blur-my-shell@aunetx
+      dynamic-music-pill@peixotonatan
+      modern-clock@modi-a-hammad
+      notification-configurator@trixter
+      quake-terminal@yurin.cold
+      quick-settings-audio-panel@peixotonatan
+      steal-my-focus-window@kavelra
+      user-theme@gnome-shell-extensions.gcampax.github.com
+      vitals-widget@corecoding.com
+      wallpicker@tomasz.jasionar
     '';
   };
 }
