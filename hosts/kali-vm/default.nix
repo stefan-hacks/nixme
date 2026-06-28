@@ -50,10 +50,10 @@
     metasploit
     
     # Forensics
-    # Note: sleuthkit provides command-line tools; autopsy-gui is the GUI package name
+    # Note: sleuthkit provides command-line tools
     sleuthkit
-    # autopsy renamed to autopsy-gui in NixOS 26.05
-    autopsy-gui
+    # Note: autopsy is the correct package name (verified)
+    autopsy
     
     # Wireless
     # Note: wifite renamed to wifite2 in NixOS 26.05
