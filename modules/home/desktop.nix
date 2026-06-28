@@ -601,6 +601,9 @@
     gnome-tweaks
     dconf-editor
     
+    # Yaru theme (required for gtk-theme and icon-theme)
+    yaru-theme
+    
     # ═══════════════════════════════════════════════════════════════════════════
     # GNOME EXTENSIONS - For Ghost Host / stefan-hacks
     # ═══════════════════════════════════════════════════════════════════════════
