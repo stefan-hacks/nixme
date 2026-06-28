@@ -21,7 +21,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 args: let
-  inherit (args) inputs self lib;
+  inherit (args) inputs self lib withSystem;
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
   # MKUSER - Creates a Home Manager user configuration
