@@ -46,8 +46,8 @@
     dirb
     
     # Exploitation
-    # Note: metasploit package is now metasploit-framework
-    metasploit-framework
+    # Note: metasploit is the correct package name (verified)
+    metasploit
     
     # Forensics
     # Note: sleuthkit provides command-line tools; autopsy-gui is the GUI package name
