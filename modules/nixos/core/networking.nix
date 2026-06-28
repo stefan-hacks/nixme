@@ -24,20 +24,34 @@
     # Enable WiFi power saving (for laptops)
     wifi.powersave = true;
     
-    # DNS configuration
+    # DNS configuration - use systemd-resolved
     dns = "systemd-resolved";
-  };
-
-  # Use systemd-resolved for DNS
-  services.resolved = {
-    enable = true;
-    settings.Resolve = {
-      DNSSEC = "true";
-      Domains = ["~."];
-      FallbackDNS = ["1.1.1.1" "8.8.8.8"];
-      LLMNR = "true";
+    
+    # Ensure DNS works by disabling automatic DNS
+    # This prevents NetworkManager from overriding systemd-resolved
+    connectionConfig = {
+      "dns-priority" = "-100";
     };
   };
+
+  # Use systemd-resolved for DNS - PROPERLY CONFIGURED
+  services.resolved = {
+    enable = true;
+    fallbackDns = [ "8.8.8.8" "1.1.1.1" ];
+    extraConfig = ''''
+      # DNS Configuration for proper name resolution
+      DNSSEC=yes
+      DNSOverTLS=no
+      Cache=yes
+      DNSStubListener=yes
+    ''';
+  };
+  
+  # Ensure /etc/resolv.conf points to systemd-resolved
+  networking.resolvconf.enable = true;
+  
+  # Use systemd-resolved's DNS stub
+  environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";
 
   # ═══════════════════════════════════════════════════════════════════════════
   # FIREWALL
@@ -66,6 +80,9 @@
       5353
       # DNS resolution (required for systemd-resolved)
       53
+      # DHCP
+      67
+      68
     ];
     
     # Allow ping

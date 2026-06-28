@@ -33,11 +33,21 @@
   boot.extraModulePackages = [ ];
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # LUKS ENCRYPTION
+  # LUKS ENCRYPTION - Optimized for SSD performance
   # ═══════════════════════════════════════════════════════════════════════════
   # Root filesystem is encrypted with LUKS
   boot.initrd.luks.devices."luks-73f977e2-cc74-43cb-9785-469f34254193" = {
     device = "/dev/disk/by-uuid/73f977e2-cc74-43cb-9785-469f34254193";
+    # SSD optimizations for faster boot
+    allowDiscards = true;      # Enable TRIM support for SSD performance
+    bypassWorkqueues = true;     # Reduce latency on SSDs
+  };
+  
+  # Swap encryption with same optimizations
+  boot.initrd.luks.devices."luks-2489b697-27f0-4e66-bae0-c32a2078c9f5" = {
+    device = "/dev/disk/by-uuid/2489b697-27f0-4e66-bae0-c32a2078c9f5";
+    allowDiscards = true;
+    bypassWorkqueues = true;
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -55,7 +65,7 @@
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # SWAP
+  # SWAP - Using the decrypted LUKS device
   # ═══════════════════════════════════════════════════════════════════════════
   swapDevices = [
     { device = "/dev/mapper/luks-2489b697-27f0-4e66-bae0-c32a2078c9f5"; }
