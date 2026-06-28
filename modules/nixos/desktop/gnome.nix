@@ -127,7 +127,9 @@
       # Install ALL Nerd Font sets
       # Includes icons/glyphs for terminals, code editors, and development tools
       # Full list: https://www.nerdfonts.com/font-downloads
-      nerdfonts
+      # Note: nerdfonts must use override form in NixOS 26.05
+      # Using all available fonts from the nerdfonts package
+      (nerdfonts.override { fonts = nerdfonts.fonts; })
     ];
     
     fontconfig = {
