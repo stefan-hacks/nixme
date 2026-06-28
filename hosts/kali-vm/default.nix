@@ -38,8 +38,8 @@
     # Note: burpsuite may be available as burpsuite-community or burpsuite-pro
     # Using standard burpsuite name for now
     burpsuite
-    # zap may be zaproxy in some versions
-    zaproxy
+    # zap is the correct package name (verified)
+    zap
     sqlmap
     wfuzz
     gobuster
