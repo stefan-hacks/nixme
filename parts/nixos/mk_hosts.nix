@@ -22,6 +22,9 @@
 
 args: let
   inherit (args) inputs self lib withSystem;
+
+  # Import constants - passed to NixOS modules via specialArgs
+  const = import ../lib/const.nix { inherit lib; };
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
   # MKUSER - Creates a Home Manager user configuration
@@ -104,11 +107,9 @@ in rec {
   }: {
     "${name}" = withSystem system (
       {pkgs, ...}: let
-        # Extra arguments passed to all modules
-        # const and mlib are injected via parts/const.nix and parts/lib/default.nix
-        # through perSystem._module.args, so they're available in modules automatically
+        # Extra arguments passed to all modules via specialArgs
         extraArgs = {
-          inherit inputs self;
+          inherit inputs self const;
           vars = {
             hostname = name;
             username = "stefan-hacks";
