@@ -50,8 +50,9 @@
     autopsy
     
     # Wireless
+    # Note: wifite renamed to wifite2 in NixOS 26.05
     aircrack-ng
-    wifite
+    wifite2
     reaverwps
     
     # Password
