@@ -34,7 +34,8 @@
     iw
     
     # Bandwidth testing
+    # Note: fast-cli was removed in NixOS 26.05 (unmaintainable in nixpkgs)
+    # speedtest-cli remains available for command-line bandwidth testing
     speedtest-cli
-    fast-cli
   ];
 }
