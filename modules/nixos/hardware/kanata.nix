@@ -22,8 +22,15 @@
       # Auto-detect keyboards (empty list = all keyboards)
       devices = [];
 
+      # Extra defcfg settings (NixOS module generates the defcfg block)
+      extraDefCfg = ''
+        process-unmapped-keys yes
+        log-layer-changes no
+      '';
+
       # Load the kanata.kbd configuration from local file
       # Path from modules/nixos/hardware/ to assets/kanata/ is ../../../assets/kanata/
+      # NOTE: This file should NOT contain (defcfg ...) as NixOS generates it
       config = builtins.readFile ../../../assets/kanata/kanata.kbd;
     };
   };
@@ -31,9 +38,8 @@
   # ═══════════════════════════════════════════════════════════════════════════
   # REQUIRED KERNEL MODULES AND PERMISSIONS
   # ═══════════════════════════════════════════════════════════════════════════
-  # Enable uinput device for kanata to create virtual keyboards
-  hardware.uinput.enable = true;
-
+  # Note: hardware.uinput.enable is automatically set by services.kanata.enable
+  
   # Add kanata user to input group for keyboard device access
   users.groups.input = {};
 
