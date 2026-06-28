@@ -34,18 +34,12 @@
     };
   };
 
-  # Use systemd-resolved for DNS - PROPERLY CONFIGURED
+  # Use systemd-resolved for DNS
   services.resolved = {
     enable = true;
     fallbackDns = [ "8.8.8.8" "1.1.1.1" ];
-    # Settings for systemd-resolved (using proper Nix attribute syntax)
-    settings = {
-      # DNS Configuration for proper name resolution
-      DNSSEC = "yes";
-      DNSOverTLS = "no";
-      Cache = "yes";
-      DNSStubListener = "yes";
-    };
+    # Valid options: dnssec, llmnr, etc
+    # See: https://search.nixos.org/options?channel=unstable&show=services.resolved
   };
   
   # Ensure /etc/resolv.conf points to systemd-resolved
