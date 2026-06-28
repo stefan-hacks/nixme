@@ -24,7 +24,8 @@ args: let
   inherit (args) inputs self lib withSystem;
 
   # Import constants - passed to NixOS modules via specialArgs
-  const = import ../lib/const.nix { inherit lib; };
+  # Path from parts/nixos/mk_hosts.nix to lib/const.nix is ../../lib/const.nix
+  const = import ../../lib/const.nix { inherit lib; };
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
   # MKUSER - Creates a Home Manager user configuration
