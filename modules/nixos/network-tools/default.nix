@@ -25,7 +25,9 @@
     socat
     netcat-gnu
     bind
-    dogdns
+    # Note: dogdns was removed in NixOS 26.05 (unmaintained, insecure dependencies)
+    # Replaced with doggo - a similar modern DNS client written in Go
+    doggo
     
     # WiFi
     wavemon
