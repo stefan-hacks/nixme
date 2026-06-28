@@ -107,8 +107,8 @@ in rec {
         # Extra arguments passed to all modules (NO pkgs here - let nixosSystem construct it)
         extraArgs = {
           inherit inputs self;
-          mlib = inputs.self.libModule args;
-          const = inputs.self.const;
+          # mlib and const are now passed via _module.args from parts/lib and parts/const
+          # and are available in modules through the module system
           vars = {
             hostname = name;
             username = "stefan-hacks";

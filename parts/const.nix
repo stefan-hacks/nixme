@@ -38,116 +38,121 @@
   # USER CONFIGURATION - Primary user for all hosts
   # ═══════════════════════════════════════════════════════════════════════════
   primaryUser = "stefan-hacks";
-in {
-  flake = {
-    # ═══════════════════════════════════════════════════════════════════════════
-    # CONSTANTS - Available as 'const' in modules
-    # ═══════════════════════════════════════════════════════════════════════════
-    const = {
-      # ─────────────────────────────────────────────────────────────────────────
-      # SSH KEYS
-      # ─────────────────────────────────────────────────────────────────────────
-      keys = {
-        # User SSH public keys
-        users = {
-          stefan-hacks = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J stefan-hacks@ghost";
-          lin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J lin@ghost";
-        };
 
-        # Host SSH public keys (for host-based authentication and known_hosts)
-        inherit hostKeys;
-
-        # Host groupings for easy reference
-        # Usage: const.keys.all-hosts, const.keys.vms, const.keys.physical
-        all-hosts = hostKeys;
-        vms = filterAttrs (name: _: elem name ["kali-vm" "debian-vm" "fedora-vm"]) hostKeys;
-        physical = filterAttrs (name: _: elem name ["ghost"]) hostKeys;
-      };
-
-      # ─────────────────────────────────────────────────────────────────────────
-      # VM SSH PORTS
-      # ─────────────────────────────────────────────────────────────────────────
-      # SSH ports for VMs running on Ghost laptop
-      vm-ssh-ports = {
-        kali-vm = 2221;
-        debian-vm = 2222;
-        fedora-vm = 2223;
-      };
-
-      # ─────────────────────────────────────────────────────────────────────────
-      # SERVICE PORTS
-      # ─────────────────────────────────────────────────────────────────────────
-      ports = {
-        # Development
-        http = 80;
-        https = 443;
-        
-        # Databases
-        postgres = 5432;
-        redis = 6379;
-        
-        # Monitoring
-        prometheus = 9090;
-        grafana = 3000;
-        
-        # Sync
-        syncthing = 8384;
-        
-        # VM services
-        vm-ssh-start = 2220;  # Base port for VM SSH (2221, 2222, etc.)
-      };
-
-      # ─────────────────────────────────────────────────────────────────────────
-      # STATIC IPs
-      # ─────────────────────────────────────────────────────────────────────────
-      ips = {
-        localhost = "127.0.0.1";
-        ghost = "192.168.1.100";  # Update with actual IP
-      };
-
-      # ─────────────────────────────────────────────────────────────────────────
-      # USER CONFIGURATION
-      # ─────────────────────────────────────────────────────────────────────────
+  # ═══════════════════════════════════════════════════════════════════════════
+  # CONSTANTS - Moved from flake output to internal let-binding
+  # ═══════════════════════════════════════════════════════════════════════════
+  const = {
+    # ─────────────────────────────────────────────────────────────────────────
+    # SSH KEYS
+    # ─────────────────────────────────────────────────────────────────────────
+    keys = {
+      # User SSH public keys
       users = {
-        primary = primaryUser;
-        admin = "lin";
+        stefan-hacks = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J stefan-hacks@ghost";
+        lin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J lin@ghost";
       };
 
-      # ─────────────────────────────────────────────────────────────────────────
-      # HOST CONFIGURATION
-      # ─────────────────────────────────────────────────────────────────────────
-      host-metadata = {
-        ghost = {
-          description = "Primary laptop - Lenovo ThinkPad P1 Gen 4";
-          system = "x86_64-linux";
-          stateVersion = "26.05";
-          primary-user = primaryUser;
-        };
-        kali-vm = {
-          description = "Kali Linux VM for penetration testing";
-          system = "x86_64-linux";
-          stateVersion = "26.05";
-          primary-user = primaryUser;
-        };
-        debian-vm = {
-          description = "Debian VM for development";
-          system = "x86_64-linux";
-          stateVersion = "26.05";
-          primary-user = primaryUser;
-        };
-        fedora-vm = {
-          description = "Fedora VM for testing";
-          system = "x86_64-linux";
-          stateVersion = "26.05";
-          primary-user = primaryUser;
-        };
-        lin-ai = {
-          description = "AI/ML workstation";
-          system = "x86_64-linux";
-          stateVersion = "26.05";
-          primary-user = primaryUser;
-        };
+      # Host SSH public keys (for host-based authentication and known_hosts)
+      inherit hostKeys;
+
+      # Host groupings for easy reference
+      # Usage: const.keys.all-hosts, const.keys.vms, const.keys.physical
+      all-hosts = hostKeys;
+      vms = filterAttrs (name: _: elem name ["kali-vm" "debian-vm" "fedora-vm"]) hostKeys;
+      physical = filterAttrs (name: _: elem name ["ghost"]) hostKeys;
+    };
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # VM SSH PORTS
+    # ─────────────────────────────────────────────────────────────────────────
+    # SSH ports for VMs running on Ghost laptop
+    vm-ssh-ports = {
+      kali-vm = 2221;
+      debian-vm = 2222;
+      fedora-vm = 2223;
+    };
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # SERVICE PORTS
+    # ─────────────────────────────────────────────────────────────────────────
+    ports = {
+      # Development
+      http = 80;
+      https = 443;
+      
+      # Databases
+      postgres = 5432;
+      redis = 6379;
+      
+      # Monitoring
+      prometheus = 9090;
+      grafana = 3000;
+      
+      # Sync
+      syncthing = 8384;
+      
+      # VM services
+      vm-ssh-start = 2220;  # Base port for VM SSH (2221, 2222, etc.)
+    };
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # STATIC IPs
+    # ─────────────────────────────────────────────────────────────────────────
+    ips = {
+      localhost = "127.0.0.1";
+      ghost = "192.168.1.100";  # Update with actual IP
+    };
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # USER CONFIGURATION
+    # ─────────────────────────────────────────────────────────────────────────
+    users = {
+      primary = primaryUser;
+      admin = "lin";
+    };
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # HOST CONFIGURATION
+    # ─────────────────────────────────────────────────────────────────────────
+    host-metadata = {
+      ghost = {
+        description = "Primary laptop - Lenovo ThinkPad P1 Gen 4";
+        system = "x86_64-linux";
+        stateVersion = "26.05";
+        primary-user = primaryUser;
       };
+      kali-vm = {
+        description = "Kali Linux VM for penetration testing";
+        system = "x86_64-linux";
+        stateVersion = "26.05";
+        primary-user = primaryUser;
+      };
+      debian-vm = {
+        description = "Debian VM for development";
+        system = "x86_64-linux";
+        stateVersion = "26.05";
+        primary-user = primaryUser;
+      };
+      fedora-vm = {
+        description = "Fedora VM for testing";
+        system = "x86_64-linux";
+        stateVersion = "26.05";
+        primary-user = primaryUser;
+      };
+      lin-ai = {
+        description = "AI/ML workstation";
+        system = "x86_64-linux";
+        stateVersion = "26.05";
+        primary-user = primaryUser;
+      };
+    };
+  };
+in {
+  # Export const via _module.args so it's available in modules
+  perSystem = {system, ...}: {
+    _module.args = {
+      inherit const;
     };
   };
 }
