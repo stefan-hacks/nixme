@@ -151,6 +151,12 @@
     "findfi" = "find . -type f -iname";  # Find files case-insensitive
     
     # ═══════════════════════════════════════════════════════════════════════════
+    # SYSTEM INFO / FETCH TOOLS
+    # ═══════════════════════════════════════════════════════════════════════════
+    "ff" = "fastfetch";  # Fast system info fetch
+    "ffa" = "fastfetch -c all";  # Fastfetch with all modules
+    
+    # ═══════════════════════════════════════════════════════════════════════════
     # NIXOS SPECIFIC
     # ═══════════════════════════════════════════════════════════════════════════
     "nrs" = "sudo nixos-rebuild switch --flake";
