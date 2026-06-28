@@ -104,17 +104,9 @@ in rec {
   }: {
     "${name}" = withSystem system (
       {pkgs, ...}: let
-        # Create pkgs with unfree packages allowed
-        # This is needed because withSystem pkgs doesn't have allowUnfree by default
-        pkgsUnfree = import inputs.nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
-        
-        # Extra arguments passed to all modules
+        # Extra arguments passed to all modules (NO pkgs here - let nixosSystem construct it)
         extraArgs = {
           inherit inputs self;
-          pkgs = pkgsUnfree;  # Use pkgs with unfree allowed
           mlib = inputs.self.libModule args;
           const = inputs.self.const;
           vars = {
@@ -131,6 +123,7 @@ in rec {
           
           modules = [
             # Allow unfree packages (Discord, etc.)
+            # nixosSystem constructs pkgs with this config automatically
             { nixpkgs.config.allowUnfree = true; }
             
             # System metadata
