@@ -30,10 +30,14 @@
 
 {lib, ...}: let
   inherit (lib) mkOption types;
-
-  # Custom library functions passed to modules via specialArgs as 'mlib'
-  # Moved from flake output to internal let-binding (nix flake check compatibility)
-  libModule = args: rec {
+in {
+  # ═══════════════════════════════════════════════════════════════════════════
+  # LIBMODULE - Custom library functions (NOT as flake output)
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Usage in mk_hosts.nix: mlib = (import ../lib/default.nix { inherit lib; }).libModule;
+  # Then pass mlib through specialArgs so modules can use it.
+  # ═══════════════════════════════════════════════════════════════════════════
+  libModule = { config, pkgs, lib, ... }: rec {
     # ═══════════════════════════════════════════════════════════════════════
     # OPTION HELPERS
     # ═══════════════════════════════════════════════════════════════════════
@@ -66,12 +70,5 @@
     # Enable/Disable with additional configuration
     enableAnd = cfg: cfg // {enable = true;};
     disableAnd = cfg: cfg // {enable = false;};
-  };
-in {
-  # Export libModule via _module.args so it's available as 'mlib' in modules
-  perSystem = {system, ...}: {
-    _module.args = {
-      mlib = libModule;
-    };
   };
 }

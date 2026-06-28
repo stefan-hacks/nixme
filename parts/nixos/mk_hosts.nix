@@ -26,6 +26,10 @@ args: let
   # Import constants - used by modules that take 'const' as an argument
   # const.nix exports 'const' attribute directly (not via perSystem)
   const = (import ../const.nix { inherit lib; }).const;
+
+  # Import library module - used by modules that take 'mlib' as an argument
+  # lib.nix exports 'libModule' attribute directly (not via perSystem)
+  mlib = (import ../lib/default.nix { inherit lib; }).libModule;
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
   # MKUSER - Creates a Home Manager user configuration
