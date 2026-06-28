@@ -38,13 +38,14 @@
   services.resolved = {
     enable = true;
     fallbackDns = [ "8.8.8.8" "1.1.1.1" ];
-    extraConfig = ''''
+    # Settings for systemd-resolved (using proper Nix attribute syntax)
+    settings = {
       # DNS Configuration for proper name resolution
-      DNSSEC=yes
-      DNSOverTLS=no
-      Cache=yes
-      DNSStubListener=yes
-    ''';
+      DNSSEC = "yes";
+      DNSOverTLS = "no";
+      Cache = "yes";
+      DNSStubListener = "yes";
+    };
   };
   
   # Ensure /etc/resolv.conf points to systemd-resolved
