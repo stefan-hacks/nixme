@@ -30,8 +30,7 @@
   
   hardware.opengl = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
+    # Note: driSupport removed in NixOS 26.05 - now automatic
     extraPackages = with pkgs; [
       cudaPackages.cuda_nvml_dev
       cudaPackages.cuda_cudart
@@ -80,8 +79,10 @@
   # ═══════════════════════════════════════════════════════════════════════════
   # OLLAMA SERVICE
   # ═══════════════════════════════════════════════════════════════════════════
+  # Note: acceleration option removed in NixOS 26.05
+  # Use package option instead: ollama, ollama-cuda, ollama-rocm, ollama-vulkan, ollama-cpu
   services.ollama = {
     enable = true;
-    acceleration = "cuda";
+    package = pkgs.ollama-cuda;  # CUDA acceleration for NVIDIA GPUs
   };
 }
