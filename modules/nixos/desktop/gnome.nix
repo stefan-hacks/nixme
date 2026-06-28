@@ -99,7 +99,8 @@
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
-    noto-fonts-emoji
+    # Note: noto-fonts-emoji renamed to noto-fonts-color-emoji in NixOS 26.05
+    noto-fonts-color-emoji
     font-awesome
     
     # Themes
@@ -117,7 +118,8 @@
       # These provide CJK (Chinese, Japanese, Korean) font support
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
-      noto-fonts-emoji
+      # Note: noto-fonts-emoji renamed to noto-fonts-color-emoji in NixOS 26.05
+      noto-fonts-color-emoji
       font-awesome
       fira-code
       fira-code-symbols
