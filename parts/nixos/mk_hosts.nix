@@ -22,6 +22,11 @@
 
 args: let
   inherit (args) inputs self lib withSystem;
+
+  # Import constants - used by modules that take 'const' as an argument
+  # const.nix exports perSystem, so we evaluate it with a dummy system
+  constModule = import ../const.nix { inherit lib; };
+  const = (constModule.perSystem { system = "x86_64-linux"; }).const;
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
   # MKUSER - Creates a Home Manager user configuration
@@ -106,9 +111,9 @@ in rec {
       {pkgs, ...}: let
         # Extra arguments passed to all modules (NO pkgs here - let nixosSystem construct it)
         extraArgs = {
-          inherit inputs self;
-          # mlib and const are now passed via _module.args from parts/lib and parts/const
-          # and are available in modules through the module system
+          inherit inputs self const;
+          # mlib is passed via _module.args from parts/lib
+          # const is imported above and passed here
           vars = {
             hostname = name;
             username = "stefan-hacks";
