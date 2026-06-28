@@ -31,7 +31,7 @@ in {
       # ─────────────────────────────────────────────────────────────────────────
       # SSH KEYS
       # ─────────────────────────────────────────────────────────────────────────
-      keys = {
+      keys = rec {
         # User SSH public keys
         users = {
           stefan-hacks = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J stefan-hacks@ghost";
