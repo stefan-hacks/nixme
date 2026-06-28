@@ -15,7 +15,8 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 {lib, ...}: {
-  # Inject 'const' into the module system's _module.args
+  # Inject 'const' into the flake-parts module system's _module.args
+  # Path from parts/const.nix to lib/const.nix is ../lib/const.nix
   perSystem = {system, ...}: {
     _module.args.const = import ../lib/const.nix { inherit lib; };
   };
