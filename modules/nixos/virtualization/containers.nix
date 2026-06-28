@@ -3,19 +3,12 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 { config, pkgs, lib, vars, ... }: {
-  # Enable Podman
+  # Enable Podman (Docker-compatible)
   virtualisation.podman = {
     enable = true;
-    dockerCompat = true;
+    # Note: dockerCompat removed - conflicts with virtualisation.docker
+    # Use 'alias docker=podman' in shell if needed
     defaultNetwork.settings.dns_enabled = true;
-  };
-  
-  # Enable Docker (optional - using Podman as default)
-  virtualisation.docker = {
-    enable = true;
-    daemon.settings = {
-      "dns" = [ "1.1.1.1" "8.8.8.8" ];
-    };
   };
   
   # Add user to docker/podman groups

@@ -54,6 +54,9 @@
     };
   };
   
+  # Disable power-profiles-daemon (conflicts with TLP)
+  services.power-profiles-daemon.enable = lib.mkDefault false;
+  
   # Enable brightness control
   hardware.brillo.enable = true;
   

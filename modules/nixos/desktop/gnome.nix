@@ -16,11 +16,8 @@
     enable = true;
     
     # Display Manager - GDM (GNOME Display Manager)
-    displayManager.gdm = {
-      enable = true;
-      # Enable Wayland by default, fallback to X11
-      wayland = true;
-    };
+    # Note: wayland is enabled by default in GNOME 50+
+    displayManager.gdm.enable = true;
     
     # Desktop Manager - GNOME
     desktopManager.gnome = {

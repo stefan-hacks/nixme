@@ -24,7 +24,7 @@
       
       # UEFI support
       efiSupport = true;
-      efiInstallAsRemovable = true;
+      # Note: Removed efiInstallAsRemovable - conflicts with canTouchEfiVariables
       
       # Enable os-prober to detect other OS installations
       useOSProber = true;
