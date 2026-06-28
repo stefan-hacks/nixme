@@ -1,0 +1,33 @@
+# Nix build outputs
+result
+result-*
+
+# Nix
+*.nix.bak
+*.nix~  
+
+# Temp files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Secrets (managed by sops-nix)
+secrets/*.yaml
+secrets/*.json
+!secrets/.gitkeep
+
+# Local configuration
+local.nix
+*.local.nix
+
+# Hardware configurations (user-specific)
+hosts/*/hardware-configuration.nix
+
+# Logs
+*.log

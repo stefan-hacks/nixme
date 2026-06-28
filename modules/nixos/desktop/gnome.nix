@@ -1,0 +1,147 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# MODULES/NIXOS/DESKTOP/GNOME.NIX - GNOME Desktop Environment
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# Configures GNOME desktop with GDM display manager and essential tools.
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+{ config, pkgs, lib, ... }:
+
+{
+  # ═══════════════════════════════════════════════════════════════════════════
+  # X11/WAYLAND
+  # ═══════════════════════════════════════════════════════════════════════════
+  services.xserver = {
+    enable = true;
+    
+    # Display Manager - GDM (GNOME Display Manager)
+    displayManager.gdm = {
+      enable = true;
+      # Enable Wayland by default, fallback to X11
+      wayland = true;
+    };
+    
+    # Desktop Manager - GNOME
+    desktopManager.gnome = {
+      enable = true;
+      # Exclude some default GNOME applications
+      extraGSettingsOverridePackages = [ pkgs.gnome-settings-daemon ];
+    };
+  };
+
+  # Enable PipeWire for audio
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+    
+    # Use WirePlumber session manager
+    wireplumber.enable = true;
+  };
+
+  # Enable Bluetooth
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+        Experimental = true;
+      };
+    };
+  };
+  services.blueman.enable = true;
+
+  # Enable printing
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [
+      gutenprint
+      hplip
+    ];
+  };
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
+
+  # GNOME packages to exclude (to reduce closure size)
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-connections
+    gnome-tour
+    epiphany          # Web browser (use Firefox instead)
+    geary             # Email client
+    evince            # Document viewer (use zathura from home)
+  ];
+
+  # System packages for desktop
+  environment.systemPackages = with pkgs; [
+    # GNOME utilities
+    gnome.adwaita-icon-theme
+    gnome.gnome-settings-daemon
+    gnome.gnome-screenshot
+    gnome.gnome-tweaks
+    gnome.dconf-editor
+    
+    # Desktop utilities
+    glib              # gsettings
+    desktop-file-utils
+    xdg-utils
+    xdg-desktop-portal
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-gnome
+    
+    # Fonts
+    dejavu_fonts
+    liberation_ttf
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    font-awesome
+    
+    # Themes
+    adw-gtk3
+    papirus-icon-theme
+  ];
+
+  # Font configuration
+  fonts = {
+    packages = with pkgs; [
+      dejavu_fonts
+      liberation_ttf
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      font-awesome
+      fira-code
+      fira-code-symbols
+      jetbrains-mono
+      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
+    ];
+    
+    fontconfig = {
+      defaultFonts = {
+        serif = [ "Noto Serif" "DejaVu Serif" ];
+        sansSerif = [ "Noto Sans" "DejaVu Sans" ];
+        monospace = [ "JetBrains Mono" "Fira Code" "DejaVu Sans Mono" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
+    };
+  };
+
+  # Enable dconf
+  programs.dconf.enable = true;
+
+  # Enable Flatpak
+  services.flatpak.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = [ "gtk" ];
+  };
+}
