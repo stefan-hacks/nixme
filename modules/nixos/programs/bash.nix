@@ -293,7 +293,7 @@
     "cpu" = "lscpu";      # CPU info
     "disk" = "df -h";     # Disk usage
     "mounts" = "mount | column -t";  # Pretty print mounts
-    "path" = 'echo -e ${PATH//:/\\n}';  # Show PATH components
+    "path" = "echo \$PATH | tr ':' '\n'";  # Show PATH components
     "ports" = "ss -tulanp";  # Show listening ports
     "listening" = "ss -tulanp | grep LISTEN";
     
