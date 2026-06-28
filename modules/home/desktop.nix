@@ -91,9 +91,9 @@
     
     # System utilities
     gnome.gnome-system-monitor
-    gnome.gnome-calculator
-    gnome.gnome-calendar
-    gnome.gnome-todo
+    gnome-calculator
+    gnome-calendar
+    # Note: gnome-todo removed - package no longer exists
     gnome.gnome-screenshot
     gnome.gnome-connections
     
