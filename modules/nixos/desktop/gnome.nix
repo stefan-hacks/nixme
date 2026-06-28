@@ -81,7 +81,7 @@
     gnome-settings-daemon
     gnome-screenshot
     gnome-tweaks
-    gnome-shell-extensions
+    # Note: gnome-shell-extensions is installed via Home Manager for stefan-hacks
     
     # Desktop utilities
     glib              # gsettings
