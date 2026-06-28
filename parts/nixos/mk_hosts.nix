@@ -104,9 +104,17 @@ in rec {
   }: {
     "${name}" = withSystem system (
       {pkgs, ...}: let
+        # Create pkgs with unfree packages allowed
+        # This is needed because withSystem pkgs doesn't have allowUnfree by default
+        pkgsUnfree = import inputs.nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        
         # Extra arguments passed to all modules
         extraArgs = {
-          inherit inputs self pkgs;
+          inherit inputs self;
+          pkgs = pkgsUnfree;  # Use pkgs with unfree allowed
           mlib = inputs.self.libModule args;
           const = inputs.self.const;
           vars = {
@@ -122,10 +130,6 @@ in rec {
           specialArgs = extraArgs;
           
           modules = [
-            # Import nixosModules.readOnlyPkgs to properly handle specialArgs.pkgs
-            # This allows nixpkgs.config options to work even when using custom pkgs
-            inputs.nixpkgs.nixosModules.readOnlyPkgs
-            
             # Allow unfree packages (Discord, etc.)
             { nixpkgs.config.allowUnfree = true; }
             
