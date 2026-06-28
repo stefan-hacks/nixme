@@ -13,8 +13,8 @@
     };
   };
   
-  # Add user to libvirtd group
-  users.users.${vars.username}.extraGroups = [ "libvirtd" ];
+  # Add user to libvirtd and vboxusers groups
+  users.users.${vars.username}.extraGroups = [ "libvirtd" "vboxusers" ];
   
   # ═══════════════════════════════════════════════════════════════════════════
   # VIRTUALBOX CONFIGURATION
@@ -24,9 +24,6 @@
     # Enable the VirtualBox kernel module
     enableExtensionPack = false;  # Set to true if you need USB passthrough, PXE, etc.
   };
-  
-  # Add user to vboxusers group for USB/access permissions
-  users.users.${vars.username}.extraGroups = [ "vboxusers" "libvirtd" ];
   
   # Enable KVM for VirtualBox (hybrid mode)
   boot.extraModprobeConfig = ''
