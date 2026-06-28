@@ -122,7 +122,10 @@
       fira-code
       fira-code-symbols
       jetbrains-mono
-      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
+      # Install ALL Nerd Font sets
+      # Includes icons/glyphs for terminals, code editors, and development tools
+      # Full list: https://www.nerdfonts.com/font-downloads
+      nerdfonts
     ];
     
     fontconfig = {
