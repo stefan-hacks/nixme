@@ -22,8 +22,8 @@
       # For UEFI systems, use efiSupport instead
       device = lib.mkDefault "nodev";  # Set per-host in hardware.nix
       
-      # UEFI support
-      efiSupport = true;
+      # UEFI support (can be overridden by hosts for BIOS VMs)
+      efiSupport = lib.mkDefault true;
       # Note: Removed efiInstallAsRemovable - conflicts with canTouchEfiVariables
       
       # Enable os-prober to detect other OS installations
