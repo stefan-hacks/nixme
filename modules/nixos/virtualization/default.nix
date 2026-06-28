@@ -1,10 +1,72 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# MODULES/NIXOS/VIRTUALIZATION/DEFAULT.NIX - Virtualization and Containers
+# MODULES/NIXOS/VIRTUALIZATION/QEMU.NIX - QEMU/KVM and VirtualBox Virtualization
 # ═══════════════════════════════════════════════════════════════════════════════
 
-{ config, pkgs, lib, ... }: {
-  imports = [
-    ./qemu.nix
-    ./containers.nix
+{ config, pkgs, lib, vars, const, ... }: {
+  # Enable virtualization
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      # OVMF is now included with QEMU by default - no separate config needed
+      swtpm.enable = true;
+    };
+  };
+  
+  # Add user to libvirtd group
+  users.users.${vars.username}.extraGroups = [ "libvirtd" ];
+  
+  # ═══════════════════════════════════════════════════════════════════════════
+  # VIRTUALBOX CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  virtualisation.virtualbox.host = {
+    enable = true;
+    # Enable the VirtualBox kernel module
+    enableExtensionPack = false;  # Set to true if you need USB passthrough, PXE, etc.
+  };
+  
+  # Add user to vboxusers group for USB/access permissions
+  users.users.${vars.username}.extraGroups = [ "vboxusers" "libvirtd" ];
+  
+  # Enable KVM for VirtualBox (hybrid mode)
+  boot.extraModprobeConfig = ''
+    options kvm_intel nested=1
+    options kvm nested=1
+  '';
+  
+  environment.systemPackages = with pkgs; [
+    # QEMU/KVM tools
+    virt-manager
+    virt-viewer
+    spice-gtk
+    spice-protocol
+    virtio-win
+    qemu_kvm
+    qemu
+    OVMF
+    libguestfs
+    
+    # VirtualBox
+    virtualbox
+    
+    # VM management helper
+    vagrant
+  ];
+  
+  # Enable SPICE USB redirection
+  services.spice-vdagentd.enable = true;
+  
+  # VM SSH port forwarding
+  networking.nat = {
+    enable = true;
+    internalInterfaces = [ "virbr0" ];
+    externalInterface = "wlan0";
+  };
+  
+  # Firewall rules for VM SSH
+  networking.firewall.allowedTCPPorts = [
+    const.vm-ssh-ports.kali-vm or 2221
+    const.vm-ssh-ports.debian-vm or 2222
+    const.vm-ssh-ports.fedora-vm or 2223
   ];
 }
