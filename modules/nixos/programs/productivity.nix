@@ -9,16 +9,17 @@
     
     # Note taking
     joplin-desktop
-    obsidian
+    #obsidian
     
     # PDF
     zathura
     
     # Diagrams
-    drawio
+    #drawio
     
     # Calculators
-    speedcrunch
+    gnome-calculator
+    #speedcrunch
     
     # Time management
     gnome-calendar

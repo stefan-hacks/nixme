@@ -6,19 +6,18 @@
   environment.systemPackages = with pkgs; [
     # Messaging
     discord
-    telegram-desktop
-    signal-desktop
+    whatsie
     
     # Email
-    thunderbird
+    evolution
     
     # Video conferencing
-    zoom-us
+    #zoom-us
     
     # IRC
-    hexchat
+    #hexchat
     
     # Matrix
-    element-desktop
+    #element-desktop
   ];
 }

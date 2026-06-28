@@ -10,14 +10,18 @@
     
     # Audio
     pavucontrol
-    easyeffects
+    cava
+    gnome-music
+    #kew
+    #easyeffects
     
     # Image viewers/editors
-    gimp
-    inkscape
+    shotwell
+    #gimp
+    #inkscape
     
     # Recording
-    obs-studio
+    #obs-studio
     
     # Media codecs (usually pulled in by players)
     ffmpeg
@@ -25,11 +29,12 @@
     
     # Streamers
     streamlink
-    
+    jellyfin-desktop
+
     # Podcasts
-    gpodder
+    #gpodder
     
     # Spotify
-    spotify
+    #spotify
   ];
 }

@@ -10,7 +10,7 @@
     aria2
     
     # Torrent
-    transmission_4-gtk
+    #transmission_4-gtk
     qbittorrent
     
     # YouTube/other download
