@@ -30,7 +30,8 @@
       useOSProber = true;
       
       # Theme and appearance
-      configurationLimit = 10;
+      # Keep last 20 generations
+      configurationLimit = 20;
       
       # Extra GRUB entries
       extraEntries = ''
@@ -107,6 +108,5 @@
   # ═══════════════════════════════════════════════════════════════════════════
   # CLEANUP
   # ═══════════════════════════════════════════════════════════════════════════
-  # Remove old generations automatically
-  boot.loader.grub.configurationLimit = 20;
+  # Note: boot.loader.grub.configurationLimit is set above in the grub section
 }
