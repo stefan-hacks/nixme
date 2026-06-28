@@ -75,7 +75,6 @@
     theharvester
     recon-ng
     amass
-    sublist3r
     
     # OSINT
     maltego
