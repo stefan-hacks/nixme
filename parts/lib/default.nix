@@ -30,42 +30,48 @@
 
 {lib, ...}: let
   inherit (lib) mkOption types;
-in {
-  flake = {
-    # Custom library functions passed to modules via specialArgs as 'mlib'
-    libModule = args: rec {
-      # ═══════════════════════════════════════════════════════════════════════
-      # OPTION HELPERS
-      # ═══════════════════════════════════════════════════════════════════════
-      
-      # Create an option with type, default value, and description
-      mkOpt = type: default: description:
-        mkOption {
-          inherit type default description;
-        };
 
-      # Create an option without description (for internal use)
-      mkOpt' = type: default: mkOpt type default null;
-
-      # Create a boolean option
-      mkBoolOpt = mkOpt types.bool;
-
-      # Create an enable option with description
-      mkEnableOpt = desc: {
-        enable = mkOpt types.bool false desc;
+  # Custom library functions passed to modules via specialArgs as 'mlib'
+  # Moved from flake output to internal let-binding (nix flake check compatibility)
+  libModule = args: rec {
+    # ═══════════════════════════════════════════════════════════════════════
+    # OPTION HELPERS
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    # Create an option with type, default value, and description
+    mkOpt = type: default: description:
+      mkOption {
+        inherit type default description;
       };
 
-      # ═══════════════════════════════════════════════════════════════════════
-      # ENABLE/DISABLE HELPERS
-      # ═══════════════════════════════════════════════════════════════════════
-      
-      # Simple enable/disable values
-      enable = {enable = true;};
-      disable = {enable = false;};
+    # Create an option without description (for internal use)
+    mkOpt' = type: default: mkOpt type default null;
 
-      # Enable/Disable with additional configuration
-      enableAnd = cfg: cfg // {enable = true;};
-      disableAnd = cfg: cfg // {enable = false;};
+    # Create a boolean option
+    mkBoolOpt = mkOpt types.bool;
+
+    # Create an enable option with description
+    mkEnableOpt = desc: {
+      enable = mkOpt types.bool false desc;
+    };
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # ENABLE/DISABLE HELPERS
+    # ═══════════════════════════════════════════════════════════════════════
+    
+    # Simple enable/disable values
+    enable = {enable = true;};
+    disable = {enable = false;};
+
+    # Enable/Disable with additional configuration
+    enableAnd = cfg: cfg // {enable = true;};
+    disableAnd = cfg: cfg // {enable = false;};
+  };
+in {
+  # Export libModule via _module.args so it's available as 'mlib' in modules
+  perSystem = {system, ...}: {
+    _module.args = {
+      mlib = libModule;
     };
   };
 }
