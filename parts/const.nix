@@ -22,16 +22,27 @@
 {lib, ...}: let
   inherit (builtins) elem;
   inherit (lib.attrsets) filterAttrs;
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SSH HOST KEYS - Defined in let-scope for proper referencing
+  # ═══════════════════════════════════════════════════════════════════════════
+  hostKeys = {
+    ghost = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@ghost";
+    kali-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@kali-vm";
+    debian-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@debian-vm";
+    fedora-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@fedora-vm";
+    lin-ai = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@lin-ai";
+  };
 in {
   flake = {
     # ═══════════════════════════════════════════════════════════════════════════
     # CONSTANTS - Available as 'const' in modules
     # ═══════════════════════════════════════════════════════════════════════════
-    const = rec {
+    const = {
       # ─────────────────────────────────────────────────────────────────────────
       # SSH KEYS
       # ─────────────────────────────────────────────────────────────────────────
-      keys = rec {
+      keys = {
         # User SSH public keys
         users = {
           stefan-hacks = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J stefan-hacks@ghost";
@@ -39,13 +50,7 @@ in {
         };
 
         # Host SSH public keys (for host-based authentication and known_hosts)
-        hostKeys = {
-          ghost = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@ghost";
-          kali-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@kali-vm";
-          debian-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@debian-vm";
-          fedora-vm = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@fedora-vm";
-          lin-ai = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIhz2GK/XCUj4i6Q5yQ8QO6Zq6i0X5Jq6Jq6Jq6Jq6J root@lin-ai";
-        };
+        inherit hostKeys;
 
         # Host groupings for easy reference
         # Usage: const.keys.all-hosts, const.keys.vms, const.keys.physical
