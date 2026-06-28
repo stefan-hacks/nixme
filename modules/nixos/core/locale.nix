@@ -44,8 +44,10 @@
 
   # X11 keyboard layout (for desktop environments)
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-    xkbOptions = "";
+    xkb = {
+      layout = "us";
+      variant = "";
+      options = "";
+    };
   };
 }

@@ -12,19 +12,17 @@
   # ═══════════════════════════════════════════════════════════════════════════
   # X11/WAYLAND
   # ═══════════════════════════════════════════════════════════════════════════
-  services.xserver = {
+  services.xserver.enable = true;
+  
+  # Display Manager - GDM (GNOME Display Manager)
+  # Note: wayland is enabled by default in GNOME 50+
+  services.displayManager.gdm.enable = true;
+  
+  # Desktop Manager - GNOME
+  services.desktopManager.gnome = {
     enable = true;
-    
-    # Display Manager - GDM (GNOME Display Manager)
-    # Note: wayland is enabled by default in GNOME 50+
-    displayManager.gdm.enable = true;
-    
-    # Desktop Manager - GNOME
-    desktopManager.gnome = {
-      enable = true;
-      # Exclude some default GNOME applications
-      extraGSettingsOverridePackages = [ pkgs.gnome-settings-daemon ];
-    };
+    # Exclude some default GNOME applications
+    extraGSettingsOverridePackages = [ pkgs.gnome-settings-daemon ];
   };
 
   # Enable PipeWire for audio

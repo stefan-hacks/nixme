@@ -31,10 +31,12 @@
   # Use systemd-resolved for DNS
   services.resolved = {
     enable = true;
-    dnssec = "true";
-    domains = ["~."];
-    fallbackDns = ["1.1.1.1" "8.8.8.8"];
-    llmnr = "true";
+    settings.Resolve = {
+      DNSSEC = "true";
+      Domains = ["~."];
+      FallbackDNS = ["1.1.1.1" "8.8.8.8"];
+      LLMNR = "true";
+    };
   };
 
   # ═══════════════════════════════════════════════════════════════════════════

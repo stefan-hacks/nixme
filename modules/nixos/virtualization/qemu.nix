@@ -25,7 +25,7 @@
     virt-viewer
     spice-gtk
     spice-protocol
-    win-virtio
+    virtio-win
     qemu_kvm
     qemu
     OVMF
