@@ -38,9 +38,9 @@
   # USER CONFIGURATION - Primary user for all hosts
   # ═══════════════════════════════════════════════════════════════════════════
   primaryUser = "stefan-hacks";
-
+in {
   # ═══════════════════════════════════════════════════════════════════════════
-  # CONSTANTS - Moved from flake output to internal let-binding
+  # CONSTANTS - Export const for use in modules (NOT as a flake output)
   # ═══════════════════════════════════════════════════════════════════════════
   const = {
     # ─────────────────────────────────────────────────────────────────────────
@@ -57,7 +57,6 @@
       inherit hostKeys;
 
       # Host groupings for easy reference
-      # Usage: const.keys.all-hosts, const.keys.vms, const.keys.physical
       all-hosts = hostKeys;
       vms = filterAttrs (name: _: elem name ["kali-vm" "debian-vm" "fedora-vm"]) hostKeys;
       physical = filterAttrs (name: _: elem name ["ghost"]) hostKeys;
@@ -66,7 +65,6 @@
     # ─────────────────────────────────────────────────────────────────────────
     # VM SSH PORTS
     # ─────────────────────────────────────────────────────────────────────────
-    # SSH ports for VMs running on Ghost laptop
     vm-ssh-ports = {
       kali-vm = 2221;
       debian-vm = 2222;
@@ -77,23 +75,14 @@
     # SERVICE PORTS
     # ─────────────────────────────────────────────────────────────────────────
     ports = {
-      # Development
       http = 80;
       https = 443;
-      
-      # Databases
       postgres = 5432;
       redis = 6379;
-      
-      # Monitoring
       prometheus = 9090;
       grafana = 3000;
-      
-      # Sync
       syncthing = 8384;
-      
-      # VM services
-      vm-ssh-start = 2220;  # Base port for VM SSH (2221, 2222, etc.)
+      vm-ssh-start = 2220;
     };
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -101,7 +90,7 @@
     # ─────────────────────────────────────────────────────────────────────────
     ips = {
       localhost = "127.0.0.1";
-      ghost = "192.168.1.100";  # Update with actual IP
+      ghost = "192.168.1.100";
     };
 
     # ─────────────────────────────────────────────────────────────────────────
@@ -146,13 +135,6 @@
         stateVersion = "26.05";
         primary-user = primaryUser;
       };
-    };
-  };
-in {
-  # Export const via _module.args so it's available in modules
-  perSystem = {system, ...}: {
-    _module.args = {
-      inherit const;
     };
   };
 }

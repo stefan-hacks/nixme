@@ -24,9 +24,8 @@ args: let
   inherit (args) inputs self lib withSystem;
 
   # Import constants - used by modules that take 'const' as an argument
-  # const.nix exports perSystem, so we evaluate it with a dummy system
-  constModule = import ../const.nix { inherit lib; };
-  const = (constModule.perSystem { system = "x86_64-linux"; }).const;
+  # const.nix exports 'const' attribute directly (not via perSystem)
+  const = (import ../const.nix { inherit lib; }).const;
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
   # MKUSER - Creates a Home Manager user configuration
