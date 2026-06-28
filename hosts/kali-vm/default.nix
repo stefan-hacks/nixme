@@ -61,7 +61,8 @@
     hydra
     
     # Recon
-    theHarvester
+    # Note: theHarvester renamed to theharvester (lowercase) in NixOS 26.05
+    theharvester
     recon-ng
     amass
     sublist3r
