@@ -65,9 +65,6 @@
     ollama
     lmstudio
     
-    # Data tools
-    apache-spark
-    
     # Container for ML
     distrobox
     
