@@ -146,9 +146,9 @@
     # ═══════════════════════════════════════════════════════════════════════════
     # FILE SEARCHING
     # ═══════════════════════════════════════════════════════════════════════════
-    "f" = "find . -type f -name";  # Find files by name
-    "d" = "find . -type d -name";  # Find directories by name
-    "ff" = "find . -type f -iname";  # Case-insensitive file search
+    "ff" = "find . -type f -name";  # Find files by name
+    "fd" = "find . -type d -name";  # Find directories by name
+    "ffi" = "find . -type f -iname";  # Case-insensitive file search
     
     # ═══════════════════════════════════════════════════════════════════════════
     # NIXOS SPECIFIC
