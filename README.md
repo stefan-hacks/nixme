@@ -64,22 +64,22 @@ nixme/
 ### Building the System
 
 ```bash
-# Clone this repository
-git clone https://github.com/stefan-hacks/nixme.git
-cd nixme
+# Clone this repository to ~/.config/nixme
+git clone https://github.com/stefan-hacks/nixme.git ~/.config/nixme
+cd ~/.config/nixme
 
 # Build and switch to the configuration
-sudo nixos-rebuild switch --flake .#ghost
+sudo nixos-rebuild switch --flake ~/.config/nixme#ghost
 
 # Or build without switching (dry run)
-sudo nixos-rebuild dry-build --flake .#ghost
+sudo nixos-rebuild dry-build --flake ~/.config/nixme#ghost
 ```
 
 ### Home Manager
 
 ```bash
 # Apply Home Manager configuration
-home-manager switch --flake .#stefan-hacks
+home-manager switch --flake ~/.config/nixme#stefan-hacks
 ```
 
 ## Development
