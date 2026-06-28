@@ -21,7 +21,7 @@
     speedcrunch
     
     # Time management
-    gnome.gnome-calendar
-    gnome.gnome-todo
+    gnome-calendar
+    gnome-todo
   ];
 }
