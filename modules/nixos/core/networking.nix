@@ -34,19 +34,25 @@
     };
   };
 
-  # Use systemd-resolved for DNS
+  # ═══════════════════════════════════════════════════════════════════════════
+  # DNS CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Using NetworkManager with systemd-resolved (modern approach)
+  # resolvconf is the legacy method and should not be used with systemd-resolved
+  
+  # DNS configuration is already set above via networking.networkmanager.dns
+  # No additional NetworkManager DNS settings needed here
+  
+  # Enable systemd-resolved service
   services.resolved = {
     enable = true;
-    fallbackDns = [ "8.8.8.8" "1.1.1.1" ];
-    # Valid options: dnssec, llmnr, etc
-    # See: https://search.nixos.org/options?channel=unstable&show=services.resolved
+    # DNS fallback servers (used when no other DNS is available)
+    settings.Resolve.FallbackDNS = [ "8.8.8.8" "1.1.1.1" ];
   };
   
-  # Ensure /etc/resolv.conf points to systemd-resolved
-  networking.resolvconf.enable = true;
-  
-  # Use systemd-resolved's DNS stub
-  environment.etc."resolv.conf".source = "/run/systemd/resolve/stub-resolv.conf";
+  # systemd-resolved manages /etc/resolv.conf automatically
+  # No need to set environment.etc."resolv.conf" manually
+  # It symlinks to /run/systemd/resolve/stub-resolv.conf
 
   # ═══════════════════════════════════════════════════════════════════════════
   # FIREWALL

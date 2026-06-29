@@ -3,6 +3,7 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # Main entry point for the Ghost laptop host.
+# Uses GRUB bootloader (default from core/boot.nix) with EFI support.
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -28,9 +29,10 @@
   # ═══════════════════════════════════════════════════════════════════════════
   # BOOT CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
-  # Systemd-boot (UEFI) - works with disko's ESP partition
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # GRUB is already enabled in modules/nixos/core/boot.nix
+  # Just need to set the device for this host
+  boot.loader.grub.device = "nodev";  # Use "nodev" for UEFI systems
+  boot.loader.grub.efiSupport = true;
   
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
