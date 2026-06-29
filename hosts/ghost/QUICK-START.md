@@ -40,7 +40,7 @@ sudo reboot
 | Component | Setup |
 |-----------|-------|
 | **Disk** | LUKS-encrypted + BTRFS with subvolumes |
-| **Boot** | systemd-boot (UEFI) |
+| **Boot** | GRUB (UEFI) |
 | **Desktop** | GNOME with all your extensions |
 | **User** | stefan-hacks with Home Manager |
 | **Terminal** | Kitty + Zellij |

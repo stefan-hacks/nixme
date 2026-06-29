@@ -371,7 +371,7 @@ nixos-install --flake /tmp/nixme#ghost --no-root-passwd
   - Sets up users, services, etc.
 
 - **Final Phase:** Installing bootloader
-  - systemd-boot is installed to ESP
+  - GRUB is installed to ESP
   - GRUB configuration is generated
 
 ## 🔐 Step 10: Set Root Password and Reboot
@@ -406,7 +406,7 @@ reboot
 
 ### Boot Process
 1. **VirtualBox BIOS/UEFI screen** - Press any key if prompted
-2. **systemd-boot menu** - Select "NixOS" or wait for auto-boot
+2. **GRUB menu** - Select "NixOS" or wait for auto-boot
 3. **LUKS passphrase prompt** - Enter the password you set during disko
 4. **System boots** - You should see the NixOS boot messages
 

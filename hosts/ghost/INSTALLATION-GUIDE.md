@@ -18,7 +18,7 @@
 ### What You'll Get After Installation
 - LUKS-encrypted disk with passphrase
 - BTRFS filesystem with subvolumes (@, @home, @nix, @persist, @log)
-- NixOS unstable with systemd-boot
+- NixOS 26.05 stable with GRUB bootloader
 - GNOME desktop environment with all your settings
 - User `stefan-hacks` with full Home Manager configuration
 - All your shell aliases, git config, terminal setup (Kitty + Zellij)
