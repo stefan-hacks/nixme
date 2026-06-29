@@ -101,7 +101,7 @@ lsblk
 
 # 2. Run disko to partition and format
 # This DESTROYS ALL DATA on the disk!
-nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko /tmp/nixme/hosts/ghost/disko.nix
 
 # 3. Mount the filesystems
 mkdir -p /mnt
@@ -110,7 +110,7 @@ mkdir -p /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 
 # 4. Install NixOS
-nixos-install --flake .#ghost --no-root-passwd
+nixos-install --flake /tmp/nixme#ghost --no-root-passwd
 
 # 5. Set root password
 passwd --root /mnt

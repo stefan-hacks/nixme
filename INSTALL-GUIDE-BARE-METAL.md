@@ -228,15 +228,16 @@ Disko will:
 6. Create BTRFS filesystem with subvolumes
 
 ### Execute Disko
+
 ```bash
 # Navigate to ghost host directory
 cd /tmp/nixme/hosts/ghost
 
 # Review disko configuration first
-cat disko.nix | head -50
+cat /tmp/nixme/hosts/ghost/disko.nix | head -50
 
 # Run disko (⚠️ DESTRUCTIVE - ERASES ALL DATA!)
-nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko /tmp/nixme/hosts/ghost/disko.nix
 ```
 
 ### During Disko Execution

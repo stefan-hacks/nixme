@@ -266,7 +266,7 @@ lsblk
 
 # For VM testing, use disko-vm.nix which uses /dev/sda
 # Run disko to partition and format
-nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko-vm.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko /tmp/nixme/hosts/ghost/disko-vm.nix
 ```
 
 ### During Disko Execution

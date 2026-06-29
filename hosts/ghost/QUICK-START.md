@@ -61,7 +61,7 @@ sudo reboot
 
 ```bash
 # 1. Partition with disko (DESTROYS DATA!)
-nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko /tmp/nixme/hosts/ghost/disko.nix
 
 # 2. Mount filesystems
 mkdir -p /mnt
@@ -70,9 +70,9 @@ mkdir -p /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 
 # 3. Install
-nixos-install --flake .#ghost --no-root-passwd
+nixos-install --flake /tmp/nixme#ghost --no-root-passwd
 passwd --root /mnt
-reboot
+```
 ```
 
 ## 🆘 Troubleshooting
