@@ -332,21 +332,19 @@ For VM testing, we need to use the VM-specific disko config.
 **Option A: Quick edit (recommended for VM test)**
 ```bash
 # Create a temporary copy of the flake.nix for VM testing
-cp flake.nix flake-vm.nix
+cp /tmp/nixme/flake.nix /tmp/nixme/flake-vm.nix
 
-# Or simpler: use the original disko.nix but with device set to /dev/sda
-# Edit the flake to point to disko-vm.nix instead
-sed -i 's|./disko.nix|./disko-vm.nix|g' hosts/ghost/default.nix
+# Edit the ghost host config to use disko-vm.nix instead of disko.nix
+sed -i 's|./disko.nix|./disko-vm.nix|g' /tmp/nixme/hosts/ghost/default.nix
 ```
 
 **Option B: Create a VM-specific host config**
 ```bash
 # Create a VM host directory
-cd ../..
-mkdir -p hosts/ghost-vm
-cp -r hosts/ghost/* hosts/ghost-vm/
+mkdir -p /tmp/nixme/hosts/ghost-vm
+cp -r /tmp/nixme/hosts/ghost/* /tmp/nixme/hosts/ghost-vm/
 
-# Edit hosts/ghost-vm/default.nix to import disko-vm.nix
+# Edit /tmp/nixme/hosts/ghost-vm/default.nix to import disko-vm.nix
 # (This is what you'd do for a permanent VM)
 ```
 
@@ -357,7 +355,7 @@ cp -r hosts/ghost/* hosts/ghost-vm/
 cd /tmp/nixme
 
 # Install NixOS (takes 15-45 minutes)
-nixos-install --flake .#ghost --no-root-passwd
+nixos-install --flake /tmp/nixme#ghost --no-root-passwd
 
 # The --no-root-passwd flag means you'll set it next
 ```
@@ -528,13 +526,13 @@ systemctl restart NetworkManager
 # Option 1: Copy to /etc/nixos
 sudo cp -r /tmp/nixme /etc/nixos
 cd /etc/nixos
-sudo nixos-install --flake .#ghost
+sudo nixos-install --flake /tmp/nixme#ghost
 
 # Option 2: Clone directly to a persistent location
 sudo mkdir -p /mnt/etc/nixos
 cd /mnt/etc/nixos
 sudo git clone https://github.com/stefan-hacks/nixme.git .
-sudo nixos-install --flake .#ghost
+sudo nixos-install --flake /tmp/nixme#ghost
 ```
 
 ## 📊 What to Test in the VM

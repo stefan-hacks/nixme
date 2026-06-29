@@ -334,21 +334,19 @@ For VM testing, we need to use the VM-specific disko config.
 **Option A: Quick edit (recommended for VM test)**
 ```bash
 # Create a temporary copy of the flake.nix for VM testing
-cp flake.nix flake-vm.nix
+cp /tmp/nixme/flake.nix /tmp/nixme/flake-vm.nix
 
-# Or simpler: use the original disko.nix but with device set to /dev/sda
-# Edit the flake to point to disko-vm.nix instead
-sed -i 's|./disko.nix|./disko-vm.nix|g' hosts/ghost/default.nix
+# Edit the ghost host config to use disko-vm.nix instead of disko.nix
+sed -i 's|./disko.nix|./disko-vm.nix|g' /tmp/nixme/hosts/ghost/default.nix
 ```
 
 **Option B: Create a VM-specific host config**
 ```bash
 # Create a VM host directory
-cd ../..
-mkdir -p hosts/ghost-vm
-cp -r hosts/ghost/* hosts/ghost-vm/
+mkdir -p /tmp/nixme/hosts/ghost-vm
+cp -r /tmp/nixme/hosts/ghost/* /tmp/nixme/hosts/ghost-vm/
 
-# Edit hosts/ghost-vm/default.nix to import disko-vm.nix
+# Edit /tmp/nixme/hosts/ghost-vm/default.nix to import disko-vm.nix
 # (This is what you'd do for a permanent VM)
 ```
 
