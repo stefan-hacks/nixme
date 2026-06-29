@@ -99,7 +99,13 @@ check_prerequisites() {
     fi
     
     # Check if we're on a NixOS live ISO
-    if [[ ! -f /etc/nixos-release ]]; then
+    if [[ ! -f /etc/nixos-release ]] && [[ ! -f /etc/os-release ]]; then
+        log_error "This script must be run on a NixOS live ISO"
+        exit 1
+    fi
+    
+    # Verify it's actually NixOS
+    if ! grep -q "nixos" /etc/os-release 2>/dev/null; then
         log_error "This script must be run on a NixOS live ISO"
         exit 1
     fi
