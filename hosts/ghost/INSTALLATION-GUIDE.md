@@ -101,7 +101,7 @@ lsblk
 
 # 2. Run disko to partition and format
 # This DESTROYS ALL DATA on the disk!
-nix run github:nix-community/disko -- --mode disko ./disko.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko.nix
 
 # 3. Mount the filesystems
 mkdir -p /mnt

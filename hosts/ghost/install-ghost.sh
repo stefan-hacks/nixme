@@ -160,7 +160,7 @@ run_disko() {
     log_info "This may take a few minutes..."
     
     # Install disko and run it
-    nix run github:nix-community/disko -- --mode disko "${SCRIPT_DIR}/disko.nix"
+    nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko "${SCRIPT_DIR}/disko.nix"
     
     log_success "Disk partitioning complete"
 }

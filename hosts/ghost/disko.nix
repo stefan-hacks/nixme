@@ -25,7 +25,7 @@
 # USAGE:
 # ──────
 # From a NixOS live USB, run:
-#   sudo nix run github:nix-community/disko -- --mode disko /path/to/this/file.nix
+#   sudo nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko /path/to/this/file.nix
 #
 # Then install NixOS:
 #   sudo nixos-install --flake .#ghost

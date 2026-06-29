@@ -236,7 +236,7 @@ cd /tmp/nixme/hosts/ghost
 cat disko.nix | head -50
 
 # Run disko (⚠️ DESTRUCTIVE - ERASES ALL DATA!)
-nix run github:nix-community/disko -- --mode disko ./disko.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko.nix
 ```
 
 ### During Disko Execution

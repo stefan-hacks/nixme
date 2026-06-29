@@ -61,7 +61,7 @@ sudo reboot
 
 ```bash
 # 1. Partition with disko (DESTROYS DATA!)
-nix run github:nix-community/disko -- --mode disko ./disko.nix
+nix run --extra-experimental-features 'nix-command flakes' github:nix-community/disko -- --mode disko ./disko.nix
 
 # 2. Mount filesystems
 mkdir -p /mnt
