@@ -38,6 +38,7 @@ in {
     {
       name = "ghost";
       system = "x86_64-linux";
+      disko = true;  # Enable disko for disk partitioning
     }
     # VMs for testing and development
     {
