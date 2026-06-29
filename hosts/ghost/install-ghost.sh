@@ -8,7 +8,7 @@
 #
 # REQUIREMENTS:
 # ──────────────
-# • Boot from NixOS minimal ISO (latest unstable)
+# • Boot from NixOS minimal ISO (26.05 stable)
 # • Internet connection (Wi-Fi or Ethernet)
 # • Git clone of the nixme repository
 #

@@ -43,10 +43,11 @@
     # ─────────────────────────────────────────────────────────────────────────
     # NIXPKGS - The Core Package Repository
     # ─────────────────────────────────────────────────────────────────────────
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Using nixos-26.05 stable for reproducible, well-tested packages
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     
-    # Stable channel for packages that need more stability
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    # Unstable channel for packages that need latest features
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # ─────────────────────────────────────────────────────────────────────────
     # FLAKE-PARTS - Modular Flake Framework

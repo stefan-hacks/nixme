@@ -24,7 +24,7 @@
 2. **NixOS Minimal ISO:** https://nixos.org/download.html
    - Choose "NixOS: the Linux distribution"
    - Click "Download" under "64-bit Intel/AMD"
-   - Or direct: https://channels.nixos.org/nixos-unstable/latest-nixos-minimal-x86_64-linux.iso
+   - Or direct: https://channels.nixos.org/nixos-26.05/latest-nixos-minimal-x86_64-linux.iso
 
 ## 🖥️ Step-by-Step VirtualBox VM Setup
 

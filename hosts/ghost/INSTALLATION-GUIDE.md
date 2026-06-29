@@ -31,7 +31,7 @@
 ```bash
 # Download the latest NixOS minimal ISO
 curl -L -o nixos-minimal.iso \
-  https://channels.nixos.org/nixos-unstable/latest-nixos-minimal-x86_64-linux.iso
+  wget https://channels.nixos.org/nixos-26.05/latest-nixos-minimal-x86_64-linux.iso
 
 # Write to USB (replace /dev/sdX with your USB device)
 sudo dd if=nixos-minimal.iso of=/dev/sdX bs=4M status=progress oflag=sync

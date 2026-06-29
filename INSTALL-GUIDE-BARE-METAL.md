@@ -19,7 +19,7 @@ This guide walks you through installing NixOS on your Ghost laptop (Lenovo Think
 **What You'll Get:**
 - LUKS-encrypted disk with passphrase protection
 - BTRFS filesystem with subvolumes (@, @home, @nix, @persist, @log)
-- NixOS unstable with GRUB bootloader
+- NixOS 26.05 stable with GRUB bootloader
 - Full GNOME desktop with all your settings
 - User `stefan-hacks` with complete Home Manager configuration
 - All your shell aliases, terminal setup (Kitty + Zellij), and development tools
@@ -39,7 +39,7 @@ This guide walks you through installing NixOS on your Ghost laptop (Lenovo Think
 - A strong LUKS passphrase you'll remember!
 
 ### Required Software
-- NixOS Minimal ISO (latest unstable)
+- NixOS Minimal ISO (26.05 stable)
 
 ---
 
@@ -50,10 +50,10 @@ This guide walks you through installing NixOS on your Ghost laptop (Lenovo Think
 ```bash
 # Option 1: Using curl
 curl -L -o nixos-minimal.iso \
-  https://channels.nixos.org/nixos-unstable/latest-nixos-minimal-x86_64-linux.iso
+  https://channels.nixos.org/nixos-26.05/latest-nixos-minimal-x86_64-linux.iso
 
 # Option 2: Using wget
-wget https://channels.nixos.org/nixos-unstable/latest-nixos-minimal-x86_64-linux.iso
+wget https://channels.nixos.org/nixos-26.05/latest-nixos-minimal-x86_64-linux.iso
 
 # Verify download (optional but recommended)
 ls -lh nixos-minimal.iso
