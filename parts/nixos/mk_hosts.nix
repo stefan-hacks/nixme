@@ -19,8 +19,7 @@ in rec {
         home.username = username;
         home.homeDirectory = "/home/${username}";
       }
-      "${self.outPath}/modules/home"
-      "${self.outPath}/hosts/${hostname}/home.nix"
+      "${self.outPath}/home/users/${username}.nix"
     ];
     programs.home-manager.enable = true;
   };
@@ -81,7 +80,6 @@ in rec {
               system.stateVersion = "26.05";
             }
             "${self.outPath}/hosts/${name}"
-            "${self.outPath}/modules/nixos"
           ] ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
             hostname = name;
