@@ -68,7 +68,6 @@
     curl
     wget
     httpie
-    dogdns           # dig replacement
     mtr
     nmap
 
