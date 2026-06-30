@@ -67,7 +67,6 @@
     tlp
     acpi
     lm_sensors
-    nvtop
   ];
 
   # KERNEL MODULES
