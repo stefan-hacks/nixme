@@ -1,12 +1,9 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# HOSTS/GHOST/HARDWARE.NIX - Hardware Configuration (Disko-compatible)
+# HOSTS/GHOST/HARDWARE.NIX - Hardware Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # This file contains hardware-specific settings for the Ghost laptop.
-# For disko-based installations, filesystems are defined in disko.nix,
-# so this file only contains boot modules, kernel settings, and hardware options.
-#
-# NOTE: When using disko, DO NOT define fileSystems here - disko handles that!
+# Includes boot modules, kernel settings, hardware options, and filesystems.
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -45,29 +42,66 @@
   boot.extraModulePackages = [ ];
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # LUKS ENCRYPTION - Handled by disko, but kernel params here
+  # FILESYSTEMS
   # ═══════════════════════════════════════════════════════════════════════════
-  # NOTE: boot.initrd.luks.devices is NOT needed when using disko
-  # disko automatically sets up the LUKS devices and mounting
-  # 
-  # If you need to specify specific LUKS devices manually (rarely needed):
+  # Define your filesystems here. These were previously managed by disko.
+  # Update UUIDs to match your actual disk configuration.
+  #
+  # To find UUIDs: lsblk -f
+  #
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/CHANGE-ME";  # BTRFS root subvolume
+    fsType = "btrfs";
+    options = [ "subvol=@" "compress=zstd:1" "noatime" "discard=async" ];
+  };
+
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/CHANGE-ME";  # Same device as root
+    fsType = "btrfs";
+    options = [ "subvol=@home" "compress=zstd:1" "noatime" ];
+  };
+
+  fileSystems."/nix" = {
+    device = "/dev/disk/by-uuid/CHANGE-ME";
+    fsType = "btrfs";
+    options = [ "subvol=@nix" "compress=zstd:1" "noatime" ];
+  };
+
+  fileSystems."/persist" = {
+    device = "/dev/disk/by-uuid/CHANGE-ME";
+    fsType = "btrfs";
+    options = [ "subvol=@persist" "compress=zstd:1" "noatime" ];
+  };
+
+  fileSystems."/var/log" = {
+    device = "/dev/disk/by-uuid/CHANGE-ME";
+    fsType = "btrfs";
+    options = [ "subvol=@log" "compress=zstd:1" "noatime" ];
+  };
+
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/CHANGE-ME-ESP";  # EFI partition
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
+  };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # LUKS ENCRYPTION
+  # ═══════════════════════════════════════════════════════════════════════════
+  # If using LUKS encryption, configure it here:
   # boot.initrd.luks.devices."cryptroot" = {
   #   device = "/dev/disk/by-uuid/xxxxxx";
-  #   allowDiscards = true;
-  #   bypassWorkqueues = true;
+  #   allowDiscards = true;      # Enable TRIM for SSD
+  #   bypassWorkqueues = true;     # Reduce latency
   # };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # FILESYSTEMS - NOT DEFINED HERE (handled by disko)
+  # SWAP
   # ═══════════════════════════════════════════════════════════════════════════
-  # When using disko, all filesystems are defined in disko.nix
-  # Including them here would conflict with disko's configuration
-  
-  # ═══════════════════════════════════════════════════════════════════════════
-  # SWAP - Handled by disko (as part of the LVM)
-  # ═══════════════════════════════════════════════════════════════════════════
-  # swapDevices is managed by disko configuration
-  # swapDevices = [ ];
+  # Configure swap devices here
+  # swapDevices = [ 
+  #   { device = "/dev/disk/by-uuid/xxxxxx"; }  # swap partition
+  # ];
 
   # ═══════════════════════════════════════════════════════════════════════════
   # HARDWARE SETTINGS

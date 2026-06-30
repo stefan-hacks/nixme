@@ -18,7 +18,6 @@
 # Each host in hosts/<hostname>/ contains:
 #   • default.nix    - Main host configuration
 #   • hardware.nix   - Hardware-specific settings (generated or manual)
-#   • disko.nix      - Disk configuration (optional, for new installs)
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -38,7 +37,6 @@ in {
     {
       name = "ghost";
       system = "x86_64-linux";
-      disko = true;  # Enable disko for disk partitioning
     }
     # VMs for testing and development
     {

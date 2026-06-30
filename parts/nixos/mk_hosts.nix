@@ -103,7 +103,6 @@ in rec {
     name,           # Hostname (e.g., "ghost")
     system,         # System architecture (e.g., "x86_64-linux")
     vm ? false,     # Is this a VM?
-    disko ? false,  # Use disko for disk configuration?
     home-manager ? true,  # Enable Home Manager?
   }: {
     "${name}" = withSystem system (
@@ -135,12 +134,7 @@ in rec {
             
             # Host-specific configuration (using self.outPath for absolute path)
             "${self.outPath}/hosts/${name}"
-            
-            # Disko (optional)
-          ] ++ (mkListIf disko [
-            inputs.disko.nixosModules.default
-            "${self.outPath}/hosts/${name}/disko.nix"
-          ]) ++ (mkListIf home-manager (mkUsers {
+          ] ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
             hostname = name;
           }));
