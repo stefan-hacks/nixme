@@ -153,8 +153,8 @@
   # ═══════════════════════════════════════════════════════════════════════════
   home.packages = with pkgs; [
     # Core GNOME applications
-    gnome.nautilus
-    gnome.nautilus-python
+    nautilus                    # File manager (moved from gnome.nautilus)
+    nautilus-python             # Python extensions (moved from gnome.nautilus-python)
     gnome-system-monitor
     gnome-calculator
     gnome-calendar

@@ -136,67 +136,12 @@
   programs.zellij = {
     enable = true;
     enableBashIntegration = true;
-    # Zsh disabled - using bash as default shell
-    enableZshIntegration = false;
-    
     settings = {
       theme = "catppuccin-mocha";
       default_shell = "bash";
-      
-      ui = {
-        pane_frames = true;
-        
-        # Theme colors
-        "theme" = "catppuccin-mocha";
-      };
-      
-      # Keybinds
-      keybinds = {
-        normal = {
-          "bind \"Ctrl h\"" = { "SwitchToMode\" = "Move\""; };
-          "bind \"Ctrl t\"" = { "SwitchToMode\" = "Tab\""; };
-          "bind \"Ctrl n\"" = { "NewPane\" = ""; };
-          "bind \"Ctrl f\"" = { "ToggleFocusFullscreen\" = ""; };
-          "bind \"Ctrl p\"" = { "SwitchToMode\" = "Pane\""; };
-        };
-        locked = {
-          "bind \"Ctrl g\"" = { "SwitchToMode\" = "Normal\""; };
-        };
-      };
-      
-      # Layouts
       simplified_ui = false;
-      
-      # Scrollback
-      scrollback_editor = "nvim";
-      
-      # Copy
-      copy_command = "wl-copy";
-      copy_clipboard = "system";
-      
-      # Mirroring
-      mirror = "both";
-      
-      # Layout directory
-      layout_dir = "$HOME/.config/zellij/layouts";
     };
   };
-  
-  # Create Zellij layouts directory
-  home.file.".config/zellij/layouts/default.kdl".text = ''
-    layout {
-        pane split_direction="vertical" {
-            pane
-            pane split_direction="horizontal" {
-                pane
-                pane
-            }
-        }
-        pane size=2 borderless=true {
-            plugin location="zellij:status-bar"
-        }
-    }
-  '';
   
   # ═══════════════════════════════════════════════════════════════════════════
   # Additional terminal packages

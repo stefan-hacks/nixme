@@ -33,78 +33,78 @@
     enable = true;
     package = pkgs.vscode;
     
-    extensions = with pkgs.vscode-extensions; [
-      # General
-      ms-vscode.atom-keybindings
-      pkief.material-icon-theme
+    profiles.default = {
+      extensions = with pkgs.vscode-extensions; [
+        # Nix
+        jnoortheen.nix-ide
+        bbenoist.nix
+        
+        # Python
+        ms-python.python
+        ms-python.vscode-pylance
+        
+        # JavaScript/TypeScript
+        dbaeumer.vscode-eslint
+        esbenp.prettier-vscode
+        
+        # Rust
+        rust-lang.rust-analyzer
+        
+        # Go
+        golang.go
+        
+        # Shell
+        timonwong.shellcheck
+        
+        # Git
+        eamodio.gitlens
+        
+        # Markdown
+        yzhang.markdown-all-in-one
+        
+        # Docker
+        ms-azuretools.vscode-docker
+        
+        # Kubernetes
+        ms-kubernetes-tools.vscode-kubernetes-tools
+        
+        # Theme
+        pkief.material-icon-theme
+      ];
       
-      # Nix
-      jnoortheen.nix-ide
-      bbenoist.nix
-      
-      # Python
-      ms-python.python
-      ms-python.vscode-pylance
-      
-      # JavaScript/TypeScript
-      dbaeumer.vscode-eslint
-      esbenp.prettier-vscode
-      
-      # Rust
-      rust-lang.rust-analyzer
-      
-      # Go
-      golang.go
-      
-      # Shell
-      timonwong.shellcheck
-      
-      # Git
-      eamodio.gitlens
-      github.copilot
-      
-      # Markdown
-      yzhang.markdown-all-in-one
-      
-      # Docker
-      ms-azuretools.vscode-docker
-      
-      # Kubernetes
-      ms-kubernetes-tools.vscode-kubernetes-tools
-    ];
-    
-    userSettings = {
-      "editor.fontFamily" = "JetBrains Mono, monospace";
-      "editor.fontSize" = 14;
-      "editor.lineHeight" = 1.5;
-      "editor.tabSize" = 2;
-      "editor.insertSpaces" = true;
-      "editor.detectIndentation" = false;
-      "editor.rulers" = [ 80 120 ];
-      "editor.renderWhitespace" = "boundary";
-      "editor.wordWrap" = "on";
-      "editor.minimap.enabled" = false;
-      "editor.formatOnSave" = true;
-      "editor.formatOnPaste" = true;
-      
-      "workbench.colorTheme" = "Catppuccin Mocha";
-      "workbench.iconTheme" = "material-icon-theme";
-      
-      "terminal.integrated.fontFamily" = "JetBrains Mono";
-      "terminal.integrated.fontSize" = 13;
-      
-      "git.confirmSync" = false;
-      "git.enableSmartCommit" = true;
-      
-      "nix.enableLanguageServer" = true;
-      "nix.serverPath" = "nixd";
-      
-      "python.formatting.provider" = "black";
-      "python.linting.enabled" = true;
-      "python.linting.pylintEnabled" = true;
-      
-      "rust-analyzer.cargo.autoReload" = true;
-      "rust-analyzer.checkOnSave.command" = "clippy";
+      userSettings = {
+        "editor.fontFamily" = "JetBrains Mono, monospace";
+        "editor.fontSize" = 14;
+        "editor.lineHeight" = 1.5;
+        "editor.tabSize" = 2;
+        "editor.insertSpaces" = true;
+        "editor.detectIndentation" = false;
+        "editor.rulers" = [ 80 120 ];
+        "editor.renderWhitespace" = "boundary";
+        "editor.wordWrap" = "on";
+        "editor.minimap.enabled" = false;
+        "editor.formatOnSave" = true;
+        "editor.formatOnPaste" = true;
+        
+        "workbench.colorTheme" = "Catppuccin Mocha";
+        "workbench.iconTheme" = "material-icon-theme";
+        
+        "terminal.integrated.fontFamily" = "JetBrains Mono";
+        "terminal.integrated.fontSize" = 13;
+        
+        "git.confirmSync" = false;
+        "git.enableSmartCommit" = true;
+        
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "nixd";
+        
+        "python.formatting.provider" = "black";
+        "python.linting.enabled" = true;
+        "python.linting.pylintEnabled" = true;
+        
+        "rust-analyzer.cargo.autoReload" = true;
+        "rust-analyzer.checkOnSave.command" = "clippy";
+      };
     };
   };
   

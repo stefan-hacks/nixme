@@ -20,8 +20,11 @@
     };
   };
   
-  # Add user to libvirtd group for VM management
-  users.users.${vars.username}.extraGroups = [ "libvirtd" ];
+  # ═══════════════════════════════════════════════════════════════════════════
+  # USER GROUP MEMBERSHIPS FOR VIRTUALIZATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Add user to required groups for VM management and USB device access
+  users.users.${vars.username}.extraGroups = [ "libvirtd" "vboxusers" ];
 
   # ═══════════════════════════════════════════════════════════════════════════
   # VIRTUALBOX CONFIGURATION
@@ -32,9 +35,6 @@
     # Note: Requires manual acceptance of license on first use
     enableExtensionPack = false;
   };
-  
-  # Add user to vboxusers group for USB device access
-  users.users.${vars.username}.extraGroups = [ "vboxusers" ];
   
   # Enable KVM nested virtualization for VirtualBox
   boot.extraModprobeConfig = ''

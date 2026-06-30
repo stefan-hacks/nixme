@@ -6,12 +6,13 @@
   programs.git = {
     enable = true;
     
-    # User info
-    userName = "stefan-hacks";
-    userEmail = "stefan@example.com";  # Update with your actual email
-    
-    # Default settings
-    extraConfig = {
+    # Settings moved to settings.* in Home Manager 26.05+
+    settings = {
+      user = {
+        name = "stefan-hacks";
+        email = "stefan@example.com";  # Update with your actual email
+      };
+      
       core = {
         editor = "nvim";
         autocrlf = "input";
@@ -95,19 +96,20 @@
       };
     };
     
-    # Delta for better diffs
-    delta = {
-      enable = true;
-      options = {
-        features = "side-by-side line-numbers decorations";
-        navigate = true;
-        light = false;
-      };
-    };
-    
     # LFS
     lfs = {
       enable = true;
+    };
+  };
+  
+  # Delta moved to top-level in Home Manager 26.05+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      features = "side-by-side line-numbers decorations";
+      navigate = true;
+      light = false;
     };
   };
   

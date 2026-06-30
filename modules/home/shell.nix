@@ -212,6 +212,5 @@
     
     # System info
     fastfetch
-    neofetch
   ];
 }

@@ -72,116 +72,23 @@
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # DOTFILES - Kitty Terminal Configuration
+  # DOTFILES - Terminal Configuration
   # ═══════════════════════════════════════════════════════════════════════════
-  
-  # Kitty configuration
-  programs.kitty = {
-    enable = true;
-    settings = {
-      # Font
-      font_family = "JetBrainsMono Nerd Font";
-      font_size = 12;
-      
-      # Colors (Catppuccin Mocha theme)
-      background = "#1e1e2e";
-      foreground = "#cdd6f4";
-      cursor = "#f38ba8";
-      cursor_text_color = "#1e1e2e";
-      selection_background = "#353749";
-      selection_foreground = "#cdd6f4";
-      
-      # Color scheme
-      color0 = "#45475a";
-      color1 = "#f38ba8";
-      color2 = "#a6e3a1";
-      color3 = "#f9e2af";
-      color4 = "#89b4fa";
-      color5 = "#f5c2e7";
-      color6 = "#94e2d5";
-      color7 = "#bac2de";
-      color8 = "#585b70";
-      color9 = "#f38ba8";
-      color10 = "#a6e3a1";
-      color11 = "#f9e2af";
-      color12 = "#89b4fa";
-      color13 = "#f5c2e7";
-      color14 = "#94e2d5";
-      color15 = "#a6adc8";
-      
-      # Window settings
-      background_opacity = "0.95";
-      enable_audio_bell = false;
-      scrollback_lines = 10000;
-      window_padding_width = 4;
-      
-      # Cursor
-      cursor_shape = "beam";
-      cursor_blink_interval = 0.5;
-      
-      # Shell
-      shell = "${pkgs.bash}/bin/bash";
-      
-      # Tabs
-      tab_bar_style = "powerline";
-      tab_powerline_style = "slanted";
-      active_tab_foreground = "#1e1e2e";
-      active_tab_background = "#89b4fa";
-      inactive_tab_foreground = "#cdd6f4";
-      inactive_tab_background = "#313244";
-    };
-    
-    # Keyboard shortcuts
-    keybindings = {
-      # Tab navigation
-      "ctrl+shift+right" = "next_tab";
-      "ctrl+shift+left" = "previous_tab";
-      "ctrl+t" = "new_tab";
-      "ctrl+w" = "close_tab";
-      
-      # Font size
-      "ctrl+plus" = "increase_font_size";
-      "ctrl+minus" = "decrease_font_size";
-      "ctrl+0" = "restore_font_size";
-    };
-  };
+  # 
+  # Kitty terminal configuration is handled by modules/home/terminal.nix
+  # which is imported via the home configuration.
+  # 
+  # To customize kitty settings, edit modules/home/terminal.nix or
+  # add host-specific overrides below.
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # GIT CONFIGURATION
-  # ═══════════════════════════════════════════════════════════════════════════
-  programs.git = {
-    enable = true;
-    userName = "stefan-hacks";
-    userEmail = "stefan@example.com";  # Update with your email
-    
-    extraConfig = {
-      init.defaultBranch = "main";
-      push.autoSetupRemote = true;
-      pull.rebase = true;
-      core.editor = "nano";
-      
-      # Delta pager for better diffs
-      core.pager = "delta";
-      interactive.diffFilter = "delta --color-only";
-      delta.navigate = true;
-      delta.line-numbers = true;
-      delta.side-by-side = true;
-      merge.conflictstyle = "diff3";
-      diff.colorMoved = "default";
-    };
-    
-    # Delta package for better git diffs
-    delta.enable = true;
-  };
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # BASH SHELL CONFIGURATION
+  # SHELL CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
   programs.bash = {
     enable = true;
     
-    # Aliases
-    shellAliases = {
+    # Aliases (using mkForce to override home-manager defaults)
+    shellAliases = lib.mkForce {
       # Navigation
       ".." = "cd ..";
       "..." = "cd ../..";
@@ -242,91 +149,54 @@
   # ═══════════════════════════════════════════════════════════════════════════
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;  # Disable defaults, define our own
     
-    # Global settings for all hosts
-    extraOptionOverrides = {
-      ServerAliveInterval = "60";
-      ServerAliveCountMax = "3";
-      TCPKeepAlive = "yes";
-    };
-    
-    # Control master settings (connection multiplexing)
-    controlMaster = "auto";
-    controlPath = "~/.ssh/controlmasters/%r@%h:%p";
-    controlPersist = "10m";
-    
-    # Match blocks for specific hosts
-    matchBlocks = {
+    # Host-specific configurations using the new settings format
+    settings = {
+      # Wildcard - default settings for all hosts
+      "*" = {
+        # Global settings
+        ServerAliveInterval = 60;
+        ServerAliveCountMax = 3;
+        TCPKeepAlive = "yes";
+        
+        # Control master settings (connection multiplexing)
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/controlmasters/%r@%h:%p";
+        ControlPersist = "10m";
+      };
+      
       # Virtual Machines (all on localhost via port forwarding)
       "kali" = {
-        hostname = "localhost";
-        user = "h4ck3r";
-        port = 2221;
+        HostName = "localhost";
+        User = "h4ck3r";
+        Port = 2221;
       };
       
       "debian" = {
-        hostname = "localhost";
-        user = "user1";
-        port = 2222;
+        HostName = "localhost";
+        User = "user1";
+        Port = 2222;
       };
       
       "rocky" = {
-        hostname = "localhost";
-        user = "user1";
-        port = 2223;
+        HostName = "localhost";
+        User = "user1";
+        Port = 2223;
       };
       
       "nixos" = {
-        hostname = "localhost";
-        user = "stefan-hacks";
-        port = 2224;
+        HostName = "localhost";
+        User = "stefan-hacks";
+        Port = 2224;
       };
       
       # LIN AI - Remote machine
       "lin" = {
-        hostname = "192.168.0.155";
-        user = "lin";
-        port = 22;
+        HostName = "192.168.0.155";
+        User = "lin";
+        Port = 22;
       };
-      
-      # ═══════════════════════════════════════════════════════════════════════════
-      # ADDITIONAL HOST EXAMPLES (Commented)
-      # ═══════════════════════════════════════════════════════════════════════════
-      # "myserver" = {
-      #   hostname = "192.168.1.100";
-      #   user = "admin";
-      #   port = 22;
-      #   identityFile = "~/.ssh/id_ed25519";
-      #   # Or use specific key
-      #   # identityFile = "~/.ssh/myserver_key";
-      # };
-      #
-      # "github" = {
-      #   hostname = "github.com";
-      #   user = "git";
-      #   identityFile = "~/.ssh/github_ed25519";
-      # };
-      #
-      # "myserver-proxy" = {
-      #   hostname = "192.168.1.100";
-      #   user = "admin";
-      #   proxyJump = "bastion-host";
-      #   # Or use ProxyCommand
-      #   # extraOptions = {
-      #   #   ProxyCommand = "ssh -W %h:%p bastion-host";
-      #   # };
-      # };
-      #
-      # "myserver-tunnel" = {
-      #   hostname = "192.168.1.100";
-      #   user = "admin";
-      #   localForwards = [
-      #     { bind.port = 8080; host.address = "localhost"; host.port = 80; }
-      #   ];
-      #   remoteForwards = [
-      #     { bind.port = 9090; host.address = "localhost"; host.port = 9090; }
-      #   ];
-      # };
     };
   };
   
