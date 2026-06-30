@@ -88,7 +88,6 @@
       roboto
       open-sans
       noto-fonts
-      noto-fonts-cjk
       noto-fonts-emoji
 
       # Serif
