@@ -26,7 +26,17 @@ in {
     }
     
     # ═══════════════════════════════════════════════════════════════════════════
-    # FUTURE HOSTS (Commented - add when needed)
+    # VM HOST (For testing configuration changes)
+    # ═══════════════════════════════════════════════════════════════════════════
+    {
+      name = "nixos-vm";
+      system = "x86_64-linux";
+      home-manager = false;      # VM uses simple config without Home Manager
+      use-modules = false;       # VM is standalone, doesn't import modules/nixos
+    }
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # FUTURE HOSTS (Add here when needed)
     # ═══════════════════════════════════════════════════════════════════════════
     # {
     #   name = "kali-vm";

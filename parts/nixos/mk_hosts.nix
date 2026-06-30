@@ -61,6 +61,7 @@ in rec {
     system,
     vm ? false,
     home-manager ? true,
+    use-modules ? true,  # Set to false for standalone VM configs
   }: {
     "${name}" = withSystem system (
       {pkgs, ...}: let
@@ -82,9 +83,9 @@ in rec {
               networking.hostName = name;
               system.stateVersion = "26.05";
             }
-            "${self.outPath}/modules/nixos"
             "${self.outPath}/hosts/${name}"
-          ] ++ (mkListIf home-manager (mkUsers {
+          ] ++ (mkListIf use-modules [ "${self.outPath}/modules/nixos" ])
+            ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
             hostname = name;
           }));
