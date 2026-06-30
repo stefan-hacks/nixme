@@ -26,17 +26,6 @@ in {
     }
     
     # ═══════════════════════════════════════════════════════════════════════════
-    # VM HOST (For testing configuration changes)
-    # ═══════════════════════════════════════════════════════════════════════════
-    # Full VM config - 150GB recommended for complete Ghost setup
-    {
-      name = "nixos-vm";
-      system = "x86_64-linux";
-      home-manager = false;
-      use-modules = false;
-    }
-    
-    # ═══════════════════════════════════════════════════════════════════════════
     # FUTURE HOSTS (Add here when needed)
     # ═══════════════════════════════════════════════════════════════════════════
     # {

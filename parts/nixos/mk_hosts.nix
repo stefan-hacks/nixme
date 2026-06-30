@@ -59,9 +59,7 @@ in rec {
   mkSystem = {
     name,
     system,
-    vm ? false,
     home-manager ? true,
-    use-modules ? true,  # Set to false for standalone VM configs
   }: {
     "${name}" = withSystem system (
       {pkgs, ...}: let
@@ -71,7 +69,6 @@ in rec {
             hostname = name;
             username = "stefan-hacks";
             homeDirectory = "/home/stefan-hacks";
-            isVM = vm;
           };
         };
       in
@@ -84,8 +81,8 @@ in rec {
               system.stateVersion = "26.05";
             }
             "${self.outPath}/hosts/${name}"
-          ] ++ (mkListIf use-modules [ "${self.outPath}/modules/nixos" ])
-            ++ (mkListIf home-manager (mkUsers {
+            "${self.outPath}/modules/nixos"
+          ] ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
             hostname = name;
           }));
