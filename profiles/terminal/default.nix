@@ -105,7 +105,6 @@
     kubectl
     helm
     k9s
-    terraform
     ansible
 
     # Security
