@@ -28,21 +28,9 @@ in {
     # ═══════════════════════════════════════════════════════════════════════════
     # VM HOST (For testing configuration changes)
     # ═══════════════════════════════════════════════════════════════════════════
-    # Full VM config (requires 60GB+ disk for heavy packages)
+    # Full VM config - 150GB recommended for complete Ghost setup
     {
       name = "nixos-vm";
-      system = "x86_64-linux";
-      home-manager = false;
-      use-modules = false;
-    }
-    
-    # ═══════════════════════════════════════════════════════════════════════════
-    # VM HOST MINIMAL (For limited disk space - 50GB or less)
-    # ═══════════════════════════════════════════════════════════════════════════
-    # Excludes: Discord, VirtualBox, VSCode, heavy dev tools
-    # Use with: sudo nixos-rebuild switch --flake .#nixos-vm-minimal
-    {
-      name = "nixos-vm-minimal";
       system = "x86_64-linux";
       home-manager = false;
       use-modules = false;
