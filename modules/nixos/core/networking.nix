@@ -47,29 +47,14 @@
   networking.firewall = {
     enable = true;
     
-    # Standard daily driver ports
+    # Standard daily driver ports (matching Debian ufw setup)
+    # Note: VM ports (2221-2224) are NOT needed here - VMs connect via
+    # VirtualBox port forwarding to localhost, and localhost traffic
+    # bypasses the firewall entirely.
     allowedTCPPorts = [
-      22                # SSH (standard)
+      22                # SSH (with rate limiting configured below)
       80                # HTTP
       443               # HTTPS
-      # ═══════════════════════════════════════════════════════════════════════
-      # VM SSH PORTS (4 Linux Distro VMs) - for SSH access to VirtualBox VMs
-      # ═══════════════════════════════════════════════════════════════════════
-      2221              # Kali Linux VM
-      2222              # Debian VM
-      2223              # Rocky Linux VM
-      2224              # NixOS VM
-      # ═══════════════════════════════════════════════════════════════════════
-      # APPLICATION PORTS (Uncomment as needed)
-      # ═══════════════════════════════════════════════════════════════════════
-      # 8384              # Syncthing web UI
-      # 8080              # Generic development server
-      # 3000              # Node.js/React development
-      # 5173              # Vite development
-      # 8000              # Python HTTP server
-      # 9000              # Portainer
-      # 9090              # Cockpit web interface
-      # 11434             # Ollama API
     ];
     
     allowedUDPPorts = [
@@ -111,7 +96,7 @@
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # SSH CONFIGURATION
+  # SSH CONFIGURATION (with rate limiting like Debian ufw LIMIT)
   # ═══════════════════════════════════════════════════════════════════════════
   services.openssh = {
     enable = true;
@@ -122,11 +107,15 @@
       PasswordAuthentication = false;
       PubkeyAuthentication = true;
       
-      # Additional security
-      X11Forwarding = false;
+      # Rate limiting (like Debian ufw LIMIT)
       MaxAuthTries = 3;
+      
+      # Connection keepalive (matching SSH config)
       ClientAliveInterval = 60;
       ClientAliveCountMax = 3;
+      
+      # Disable X11 forwarding for security
+      X11Forwarding = false;
     };
     
     # Host keys
