@@ -11,9 +11,9 @@
 
 {
   imports = [
-    # Hardware configuration - MUST be a symlink to /etc/nixos/hardware-configuration.nix
-    # Create with: ln -sf /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
-    ./hardware-configuration.nix
+    # Hardware configuration - imports directly from /etc/nixos/
+    # This uses a string path which works in pure evaluation mode
+    "/etc/nixos/hardware-configuration.nix"
   ];
   
   # ═══════════════════════════════════════════════════════════════════════════
