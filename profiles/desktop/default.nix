@@ -88,7 +88,7 @@
       roboto
       open-sans
       noto-fonts
-      noto-fonts-emoji
+      noto-fonts-color-emoji
 
       # Serif
       merriweather
