@@ -97,7 +97,6 @@
       # Mono
       jetbrains-mono
       cascadia-code
-      ubuntu-mono
 
       # Icons
       papirus-icon-theme
