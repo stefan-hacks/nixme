@@ -61,9 +61,9 @@
     lidSwitchExternalPower = "suspend";
     lidSwitchDocked = "ignore";
     extraConfig = ''''
-      HandlePowerKey=suspend
-      HandleSuspendKey=suspend
-      HandleHibernateKey=hibernate
+      HandlePowerKey suspend
+      HandleSuspendKey suspend
+      HandleHibernateKey hibernate
     ''';
   };
 
