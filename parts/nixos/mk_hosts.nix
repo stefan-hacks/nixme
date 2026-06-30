@@ -1,72 +1,32 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# PARTS/NIXOS/MK_HOSTS.NIX - Host Configuration Generator
+# PARTS/NIXOS/MK_HOSTS.NIX - Host Configuration Generator (Simplified)
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# This library provides functions for generating NixOS system configurations.
-# It's inspired by the upidapi/NixOs repository's mk_hosts.nix pattern.
-#
-# FUNCTIONS:
-# ────────────
-# • mkSystem         - Creates a single NixOS system configuration
-# • foldMapHosts    - Combines multiple host configurations into one attrset
-#
-# USAGE:
-# ──────
-# In parts/nixos/default.nix:
-#   mkHosts = import ./mk_hosts.nix args;
-#   flake.nixosConfigurations = mkHosts.foldMapHosts mkHosts.mkSystem [
-#     { name = "ghost"; system = "x86_64-linux"; }
-#   ];
+# Simplified for Ghost laptop with stefan-hacks user only.
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
 args: let
   inherit (args) inputs self lib withSystem;
-
-  # Import constants - passed to NixOS modules via specialArgs
-  # Path from parts/nixos/mk_hosts.nix to lib/const.nix is ../../lib/const.nix
   const = import ../../lib/const.nix { inherit lib; };
 in rec {
   # ═══════════════════════════════════════════════════════════════════════════
-  # MKUSER - Creates a Home Manager user configuration
+  # MKUSER - Creates Home Manager user configuration for stefan-hacks
   # ═══════════════════════════════════════════════════════════════════════════
   mkUser = hostname: username: {...}: {
     imports = [
-      # Home configuration with automatic username/directory
       {
         home.username = username;
         home.homeDirectory = "/home/${username}";
       }
-      
-      # Common home modules
       "${self.outPath}/modules/home"
-      
-      # Host-specific home configuration if it exists
       "${self.outPath}/hosts/${hostname}/home.nix"
     ];
-
-    # Let Home Manager manage itself
     programs.home-manager.enable = true;
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # GETUSERNAMES - Discovers users from the host's users/ directory
-  # ═══════════════════════════════════════════════════════════════════════════
-  getUserNames = hostname: let
-    hostDir = "${self.outPath}/hosts/${hostname}";
-    hasUsers = builtins.pathExists "${hostDir}/users";
-  in
-    if !hasUsers
-    then []
-    else
-      builtins.map
-        (file: lib.removeSuffix ".nix" file)
-        (builtins.filter
-          (file: lib.hasSuffix ".nix" file)
-          (builtins.attrNames (builtins.readDir "${hostDir}/users")));
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # MKUSERS - Creates Home Manager configurations for all users
+  # MKUSERS - Home Manager for stefan-hacks
   # ═══════════════════════════════════════════════════════════════════════════
   mkUsers = {
     extraArgs,
@@ -79,11 +39,8 @@ in rec {
         backupFileExtension = "backup";
         useGlobalPkgs = true;
         useUserPackages = true;
-        
-        # Generate users from the users/ directory
-        users = lib.genAttrs
-          (getUserNames hostname)
-          (mkUser hostname);
+        # Single user: stefan-hacks
+        users."stefan-hacks" = mkUser hostname "stefan-hacks";
       };
     }
   ];
@@ -97,17 +54,16 @@ in rec {
     else [];
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # MKSYSTEM - Creates a complete NixOS system configuration
+  # MKSYSTEM - Creates NixOS system configuration
   # ═══════════════════════════════════════════════════════════════════════════
   mkSystem = {
-    name,           # Hostname (e.g., "ghost")
-    system,         # System architecture (e.g., "x86_64-linux")
-    vm ? false,     # Is this a VM?
-    home-manager ? true,  # Enable Home Manager?
+    name,
+    system,
+    vm ? false,
+    home-manager ? true,
   }: {
     "${name}" = withSystem system (
       {pkgs, ...}: let
-        # Extra arguments passed to all modules via specialArgs
         extraArgs = {
           inherit inputs self const;
           vars = {
@@ -121,18 +77,12 @@ in rec {
         inputs.nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = extraArgs;
-          
           modules = [
-            # System metadata
             {
               networking.hostName = name;
               system.stateVersion = "26.05";
             }
-            
-            # NixOS modules (using self.outPath for absolute path)
             "${self.outPath}/modules/nixos"
-            
-            # Host-specific configuration (using self.outPath for absolute path)
             "${self.outPath}/hosts/${name}"
           ] ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
