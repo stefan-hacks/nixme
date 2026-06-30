@@ -30,12 +30,20 @@
     '';
 
     # ═════════════════════════════════════════════════════════════════════════
-    # GARBAGE COLLECTION
+    # GARBAGE COLLECTION - Automatic cleanup to save disk space
     # ═════════════════════════════════════════════════════════════════════════
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
+      # Run daily at 3 AM (when system is likely idle)
+      dates = "03:00";
+      # Keep generations for 7 days (more aggressive than default 30d)
+      options = "--delete-older-than 7d";
+    };
+    
+    # Optimise store weekly (deduplicate identical files via hardlinks)
+    optimise = {
+      automatic = true;
+      dates = [ "weekly" ];
     };
 
     # ═════════════════════════════════════════════════════════════════════════
