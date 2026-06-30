@@ -123,25 +123,10 @@
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # KITTY TERMINAL
-  # ═══════════════════════════════════════════════════════════════════════════
-  programs.kitty = {
-    enable = lib.mkDefault true;
-    settings = {
-      font_size = lib.mkDefault 12;
-      scrollback_lines = lib.mkDefault 10000;
-      enable_audio_bell = false;
-      cursor_shape = "beam";
-      cursor_blink_interval = 0.5;
-    };
-  };
-
-  # ═══════════════════════════════════════════════════════════════════════════
   # NEOVIM
   # ═══════════════════════════════════════════════════════════════════════════
   programs.neovim = {
     enable = true;
-    defaultEditor = lib.mkDefault true;
     viAlias = true;
     vimAlias = true;
   };

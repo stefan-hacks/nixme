@@ -136,7 +136,6 @@
   # PROGRAMS
   # ═══════════════════════════════════════════════════════════════════════════
   programs = {
-    vim.defaultEditor = true;
     git.enable = true;
     gnupg.agent = {
       enable = true;

@@ -37,7 +37,11 @@
     lidSwitch = "suspend";
     lidSwitchExternalPower = "suspend";
     lidSwitchDocked = "ignore";
-    extraConfig = "HandlePowerKey suspend\nHandleSuspendKey suspend\nHandleHibernateKey hibernate";
+    settings.Login = {
+      HandlePowerKey = "suspend";
+      HandleSuspendKey = "suspend";
+      HandleHibernateKey = "hibernate";
+    };
   };
 
   # BACKLIGHT
