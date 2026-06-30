@@ -26,8 +26,5 @@ secrets/*.json
 local.nix
 *.local.nix
 
-# Hardware configurations (user-specific - must be symlinked or copied from /etc/nixos/)
-hosts/*/hardware-configuration.nix
-
 # Logs
 *.log
