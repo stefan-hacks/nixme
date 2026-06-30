@@ -174,9 +174,9 @@
     # GNOME EXTENSIONS - Available in nixpkgs
     # ═══════════════════════════════════════════════════════════════════════════
     # Essential
-    gnome-shell-extensions  # Base extensions
+    gnome-shell-extensions  # Base extensions (includes user-themes)
     gnomeExtensions.appindicator
-    gnomeExtensions.user-themes
+    # Note: user-themes is already included in gnome-shell-extensions, do not add separately
     
     # Optional (uncomment as needed)
     # gnomeExtensions.dash-to-dock
