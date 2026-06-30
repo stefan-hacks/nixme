@@ -643,3 +643,96 @@ This simplified NixOS configuration prioritizes:
 ---
 
 *Configuration for Ghost laptop, maintained by stefan-hacks*
+
+---
+
+## Appendix: VM Disk Space Troubleshooting
+
+### Problem: VM root filesystem full
+
+**Check disk usage:**
+```bash
+# See which filesystem is full
+df -h
+
+# Find large directories
+sudo -S -p '' du -sh /* 2>/dev/null | sort -hr | head -20
+sudo -S -p '' du -sh /var/* 2>/dev/null | sort -hr | head -10
+sudo -S -p '' du -sh /tmp/* 2>/dev/null | sort -hr | head -10
+```
+
+**Common culprits:**
+
+1. **Journal logs:**
+   ```bash
+   # Check log size
+   sudo -S -p '' journalctl --disk-usage
+   
+   # Clear old logs
+   sudo -S -p '' journalctl --vacuum-time=3d
+   ```
+
+2. **Nix store (if on same partition):**
+   ```bash
+   sudo -S -p '' nix-collect-garbage -d --delete-older-than 3d
+   ```
+
+3. **Temporary files:**
+   ```bash
+   sudo -S -p '' rm -rf /tmp/*
+   sudo -S -p '' rm -rf /var/tmp/*
+   ```
+
+4. **Package cache:**
+   ```bash
+   sudo -S -p '' rm -rf /var/cache/pacman/*  # If using Arch tools
+   sudo -S -p '' rm -rf /var/cache/apt/*     # If using Debian tools
+   ```
+
+### Solution 1: Clean Up (Quick)
+
+```bash
+# Aggressive cleanup
+sudo -S -p '' journalctl --vacuum-time=1d
+sudo -S -p '' nix-collect-garbage -d
+sudo -S -p '' rm -rf /tmp/* /var/tmp/*
+df -h  # Check if freed enough space
+```
+
+### Solution 2: Expand VM Disk (Recommended)
+
+If using **VirtualBox**:
+```bash
+# On host (Debian), shut down VM first
+VBoxManage modifyhd "path/to/disk.vdi" --resize 40960  # 40GB in MB
+# Then boot VM and expand partition
+```
+
+If using **QEMU/KVM**:
+```bash
+# On host, shut down VM first
+qemu-img resize "path/to/disk.qcow2" +20G
+# Then boot VM and expand partition
+```
+
+**Expand partition inside VM:**
+```bash
+# Check current partitions
+lsblk
+
+# Resize LVM if using LVM
+sudo -S -p '' pvresize /dev/sda3  # Adjust device
+sudo -S -p '' lvextend -l +100%FREE /dev/mapper/vg-root
+sudo -S -p '' resize2fs /
+
+# Or if just ext4 on partition (no LVM)
+sudo -S -p '' growpart /dev/sda 3  # Expand partition 3
+sudo -S -p '' resize2fs /dev/sda3
+```
+
+### Solution 3: Reinstall with Larger Disk
+
+If cleanup and resize don't work, reinstall the VM with:
+- **Minimum 40GB disk** (60GB+ recommended for NixOS)
+- **Dynamically allocated** (grows as needed)
+

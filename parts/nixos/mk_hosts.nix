@@ -74,6 +74,10 @@ in rec {
             isVM = vm;
           };
         };
+        # Determine host config file - use minimal.nix for nixos-vm-minimal
+        hostConfig = if name == "nixos-vm-minimal" 
+                     then "${self.outPath}/hosts/nixos-vm/minimal.nix"
+                     else "${self.outPath}/hosts/${name}";
       in
         inputs.nixpkgs.lib.nixosSystem {
           inherit system;
@@ -83,7 +87,7 @@ in rec {
               networking.hostName = name;
               system.stateVersion = "26.05";
             }
-            "${self.outPath}/hosts/${name}"
+            hostConfig
           ] ++ (mkListIf use-modules [ "${self.outPath}/modules/nixos" ])
             ++ (mkListIf home-manager (mkUsers {
             inherit extraArgs;
