@@ -57,10 +57,18 @@ pull_image() {
 }
 
 # Run flake check in container
+# Note: Mounts /etc/nixos if it exists (for NixOS hosts with hardware symlink)
 check_flake() {
     log_info "Running nix flake check..."
+    
+    # Build mount flags - add /etc/nixos if it exists (for hardware symlink)
+    local MOUNT_FLAGS=("-v" "$PROJECT_ROOT:/nixme:Z")
+    if [ -d "/etc/nixos" ]; then
+        MOUNT_FLAGS+=("-v" "/etc/nixos:/etc/nixos:ro")
+    fi
+    
     $CONTAINER_CMD run --rm \
-        -v "$PROJECT_ROOT:/nixme:Z" \
+        "${MOUNT_FLAGS[@]}" \
         -w /nixme \
         "$NIX_IMAGE" \
         sh -c "nix --extra-experimental-features 'nix-command flakes' flake check 2>&1"
