@@ -81,7 +81,7 @@
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # GNOME EXTENSIONS
+  # GNOME EXTENSIONS + FONTS
   # ═══════════════════════════════════════════════════════════════════════════
   home.packages = with pkgs; [
     # Extensions
@@ -98,17 +98,13 @@
     gnome-tweaks
     gnome-extension-manager
     dconf-editor
-  ];
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  # FONTS
-  # ═══════════════════════════════════════════════════════════════════════════
-  fonts.fontconfig.enable = true;
-  home.packages = with pkgs; [
+    # Fonts
     inter
     jetbrains-mono
-    papirus-icon-theme
   ];
+
+  fonts.fontconfig.enable = true;
 
   # ═══════════════════════════════════════════════════════════════════════════
   # GTK
