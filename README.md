@@ -8,14 +8,45 @@ This repository contains a minimal, focused NixOS setup designed for one purpose
 
 ## Table of Contents
 
-1. [Philosophy](#philosophy) - Why this approach
-2. [Quick Start](#quick-start) - Get up and running
-3. [Directory Structure](#directory-structure) - How it's organized
-4. [Architecture Deep-Dive](#architecture-deep-dive) - Understanding the design
-5. [Workflow](#workflow) - Making changes safely
-6. [Adding New Hosts](#adding-new-hosts) - Future scalability
-7. [Maintenance](#maintenance) - Automatic and manual tasks
-8. [Troubleshooting](#troubleshooting) - When things go wrong
+1. [Hardware Configuration Setup](#hardware-configuration-setup) - **FIRST-TIME SETUP (CRITICAL)**
+2. [Philosophy](#philosophy) - Why this approach
+3. [Quick Start](#quick-start) - Get up and running
+4. [Directory Structure](#directory-structure) - How it's organized
+5. [Architecture Deep-Dive](#architecture-deep-dive) - Understanding the design
+6. [Workflow](#workflow) - Making changes safely
+7. [Adding New Hosts](#adding-new-hosts) - Future scalability
+8. [Maintenance](#maintenance) - Automatic and manual tasks
+9. [Troubleshooting](#troubleshooting) - When things go wrong
+
+---
+
+## Hardware Configuration Setup
+
+### ⚠️ CRITICAL: Setup hardware-configuration.nix symlink
+
+This flake **requires** your actual hardware configuration. You must create a symlink or copy:
+
+```bash
+# Navigate to the flake directory
+cd ~/.config/nixme
+
+# Option A: Create symlink (recommended for single laptop)
+ln -sf /etc/nixos/hardware-configuration.nix hosts/ghost/hardware-configuration.nix
+
+# Option B: Copy the file (for CI or multiple machines)
+cp /etc/nixos/hardware-configuration.nix hosts/ghost/hardware-configuration.nix
+
+# Verify it exists
+ls -la hosts/ghost/hardware-configuration.nix
+```
+
+**Why this approach?**
+- ✅ No hardcoded paths in the flake
+- ✅ Always uses your current, correct hardware config
+- ✅ Works with flakes (no "not tracked by git" errors)
+- ✅ Can commit if needed (for CI or sharing)
+
+The file is gitignored (`hosts/*/hardware-configuration.nix`) so it won't be committed accidentally.
 
 ---
 
@@ -32,6 +63,7 @@ Previous iterations attempted to support multiple hosts, dynamic user discovery,
 - **Direct Paths**: No abstraction layers - imports use absolute paths
 - **Container Testing**: Every change validated before deployment
 - **Aggressive GC**: Daily cleanup prevents disk bloat
+- **Symlink Hardware**: Uses actual hardware-configuration.nix
 
 ### Key Decisions
 
@@ -41,7 +73,8 @@ Previous iterations attempted to support multiple hosts, dynamic user discovery,
 | No disko | Manual partitioning is more reliable for daily driver |
 | Container testing | Prevents broken configs from reaching live system |
 | Daily GC (7-day retention) | Balance between recovery options and disk usage |
-| flake-parts | Modular structure without the complexity of full NixOS modules |
+| flake-parts | Modular structure without complexity |
+| Symlink hardware config | Always current, works with flakes |
 
 ---
 
@@ -52,6 +85,23 @@ Previous iterations attempted to support multiple hosts, dynamic user discovery,
 - NixOS installed on Ghost laptop
 - Git repository cloned to `~/.config/nixme/`
 - `podman` or `docker` for containerized testing
+
+### First-Time Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/stefan-hacks/nixme.git ~/.config/nixme
+cd ~/.config/nixme
+
+# 2. CRITICAL: Create hardware config symlink
+ln -sf /etc/nixos/hardware-configuration.nix hosts/ghost/hardware-configuration.nix
+
+# 3. Verify flake works
+./scripts/test-build.sh check
+
+# 4. Apply to system
+sudo nixos-rebuild switch --flake .#ghost
+```
 
 ### Making Changes
 
@@ -94,45 +144,44 @@ sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
 ```
 nixme/
 ├── flake.nix                    # Entry point with pinned dependencies
-├── flake.lock                   # Locked inputs (nixpkgs, home-manager, etc.)
+├── flake.lock                   # Locked inputs
 │
 ├── hosts/                       # Per-host configurations
-│   └── ghost/                   # Ghost laptop (Lenovo ThinkPad P1 Gen 4)
+│   └── ghost/                   # Ghost laptop
 │       ├── default.nix          # System configuration imports
-│       ├── hardware.nix         # Hardware-specific settings (boot, filesystems)
-│       └── home.nix             # User environment (dotfiles, SSH, etc.)
+│       ├── hardware.nix         # Laptop-specific settings (CPU, power, graphics)
+│       ├── hardware-configuration.nix -> /etc/nixos/...  # SYMLINK (gitignored)
+│       └── home.nix             # User environment
 │
 ├── modules/
 │   ├── nixos/                   # System-level modules
-│   │   ├── core/                # Essential system (boot, networking, users, nix)
-│   │   ├── desktop/             # GNOME desktop environment
-│   │   ├── hardware/            # Hardware support (kanata, etc.)
-│   │   ├── programs/            # Application configurations
-│   │   ├── security/            # VPN, 1Password, etc.
-│   │   └── virtualization/      # Podman, VirtualBox, libvirt
+│   │   ├── core/                # Essential system
+│   │   ├── desktop/             # GNOME
+│   │   ├── hardware/            # Hardware support
+│   │   ├── programs/            # Applications
+│   │   ├── security/            # VPN, 1Password
+│   │   └── virtualization/      # Podman, VirtualBox
 │   └── home/                    # Home Manager modules
-│       ├── default.nix          # Aggregator for all home modules
-│       ├── desktop.nix          # GNOME apps and settings
-│       ├── development.nix      # VSCode, language servers, etc.
-│       ├── git.nix              # Git configuration with delta
-│       ├── shell.nix            # Shell packages (starship, zoxide, etc.)
-│       └── terminal.nix         # Kitty, Zellij, fonts
+│       ├── default.nix
+│       ├── desktop.nix
+│       ├── development.nix
+│       ├── git.nix
+│       ├── shell.nix
+│       └── terminal.nix
 │
-├── parts/                       # flake-parts modules (flake composition)
-│   ├── default.nix              # Aggregates all flake parts
-│   ├── const.nix                # Constants (unused in simplified setup)
-│   ├── nixos/                   # System configuration generation
-│   │   ├── default.nix          # Defines nixosConfigurations.ghost
-│   │   └── mk_hosts.nix         # Host builder (simplified for single host)
-│   ├── home-manager/            # Home Manager generation
-│   └── lib/                     # Custom library functions
+├── parts/                       # flake-parts modules
+│   ├── default.nix
+│   ├── const.nix
+│   ├── nixos/
+│   ├── home-manager/
+│   └── lib/
 │
 ├── lib/                         # Shared Nix functions
-│   ├── const.nix                # Constants
-│   └── libmodule.nix            # Module helpers
+│   ├── const.nix
+│   └── libmodule.nix
 │
-└── scripts/                     # Helper scripts
-    └── test-build.sh            # Containerized testing tool
+└── scripts/
+    └── test-build.sh            # Containerized testing
 ```
 
 ---
@@ -141,12 +190,7 @@ nixme/
 
 ### The flake-parts Pattern
 
-This configuration uses [flake-parts](https://github.com/hercules-ci/flake-parts) to organize the flake into composable modules. Instead of one large `flake.nix`, functionality is split across the `parts/` directory.
-
-**Benefits:**
-- Each part is self-contained and focused
-- Easy to add new outputs (packages, devshells, etc.)
-- Better IDE support with `debug = true`
+Uses [flake-parts](https://github.com/hercules-ci/flake-parts) to organize the flake into composable modules.
 
 **How it works:**
 1. `flake.nix` imports `flake-parts.lib.mkFlake` and points to `./parts`
@@ -170,71 +214,23 @@ User runs: nixos-rebuild switch --flake .#ghost
 └─────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  Build Process                                              │
-│  - nixpkgs: nixos-26.05 (stable)                          │
-│  - home-manager: release-26.05 (matches nixpkgs)           │
-│  - stateVersion: "26.05" (NEVER CHANGE)                    │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
 │  Result: Ghost system with stefan-hacks user configured     │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-### Module Organization
-
-#### System Modules (`modules/nixos/`)
-
-Each module is a self-contained NixOS module that can be imported independently:
-
-| Module | Purpose |
-|--------|---------|
-| `core/` | Essential system: boot, networking, users, nix settings |
-| `desktop/` | GNOME desktop environment with extensions |
-| `hardware/` | Hardware-specific configs (kanata keyboard remapper) |
-| `programs/` | User applications: Firefox, terminal tools, etc. |
-| `security/` | VPN, 1Password, security tools |
-| `virtualization/` | Podman, VirtualBox, libvirt for VMs |
-
-#### Home Modules (`modules/home/`)
-
-Home Manager modules configure the user environment:
-
-| Module | Purpose |
-|--------|---------|
-| `desktop.nix` | GNOME apps (dconf settings, extensions) |
-| `development.nix` | VSCode, language servers, dev tools |
-| `git.nix` | Git configuration with delta for diffs |
-| `shell.nix` | Shell packages: starship, zoxide, eza, etc. |
-| `terminal.nix` | Kitty terminal + Zellij multiplexer |
 
 ### Pinned Dependencies
 
 All inputs are pinned to ensure reproducibility:
 
 ```nix
-# In flake.nix
 inputs = {
-  # Stable channel - well-tested packages
   nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-  
-  # Unstable for bleeding-edge packages (when needed)
-  nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-  
-  # Home Manager - MUST match NixOS version
-  home-manager = {
-    url = "github:nix-community/home-manager/release-26.05";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
-  
-  # Other inputs follow nixpkgs for consistency
-  flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
-  sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-  ...
+  home-manager.url = "github:nix-community/home-manager/release-26.05";
+  # ... all follow nixpkgs for consistency
 };
 ```
 
-**Important:** Home Manager version must match NixOS version. Using `release-26.05` with `nixos-26.05` ensures compatibility.
+**Important:** Home Manager version must match NixOS version.
 
 ---
 
@@ -268,26 +264,7 @@ git push
 sudo nixos-rebuild switch --flake .#ghost
 ```
 
-### Why Container Testing?
-
-The `./scripts/test-build.sh` script runs `nix flake check` inside a NixOS container using Podman. This provides:
-
-- **Isolation**: Broken configs don't affect the live system
-- **Speed**: Container evaluation is faster than full rebuild
-- **Safety**: Errors are caught before deployment
-- **Reproducibility**: Same container environment every time
-
-### Types of Tests
-
-| Command | Purpose | Speed |
-|---------|---------|-------|
-| `check` | Validate flake syntax and structure | Fast (~30s) |
-| `build` | Full evaluation (catches missing packages) | Slow (~5min) |
-| `shell` | Interactive debugging | Interactive |
-
 ### Commit Message Format
-
-Follow this format for clear history:
 
 ```
 <scope>: <imperative description>
@@ -297,16 +274,11 @@ Solution: <how you fixed it>
 Tested: <how you verified it works>
 ```
 
-Examples:
-- `networking: allow port 8080 for development server`
-- `home: update starship config with new format`
-- `core: enable weekly automatic store optimisation`
-
 ---
 
 ## Adding New Hosts
 
-While this configuration is simplified for Ghost, you can add new hosts by following this pattern:
+While simplified for Ghost, you can add new hosts:
 
 ### Step 1: Create Host Directory
 
@@ -326,64 +298,15 @@ mkdir -p hosts/new-host-name
 
 ### Step 3: Create Required Files
 
-**`hosts/new-host-name/default.nix`**:
-```nix
-# Host-specific system configuration
-{ config, pkgs, ... }: {
-  # Hardware-specific imports or overrides
-  imports = [
-    ./hardware.nix
-  ];
-  
-  # Host-specific configuration
-  networking.hostName = "new-host-name";
-  
-  # Any modules not common to all hosts
-}
-```
+- `hosts/new-host-name/default.nix` - System config
+- `hosts/new-host-name/hardware.nix` - Laptop settings
+- `hosts/new-host-name/hardware-configuration.nix` - Symlink or copy
+- `hosts/new-host-name/home.nix` - User config
 
-**`hosts/new-host-name/hardware.nix`**:
-```nix
-# Generated with: sudo nixos-generate-config --show-hardware-config
-{ config, lib, pkgs, modulesPath, ... }: {
-  imports = [ ];
-  
-  boot.initrd.availableKernelModules = [ ... ];
-  boot.kernelModules = [ ... ];
-  boot.extraModulePackages = [ ];
-  
-  fileSystems."/" = { ... };
-  fileSystems."/boot" = { ... };
-  
-  swapDevices = [ ... ];
-  
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-}
-```
-
-**`hosts/new-host-name/home.nix`**:
-```nix
-# Host-specific user configuration
-{ config, pkgs, ... }: {
-  # User packages specific to this host
-  home.packages = with pkgs; [
-    # host-specific tools
-  ];
-  
-  # Host-specific settings
-  programs.git.userEmail = "stefan@new-host";
-}
-```
-
-### Step 4: Test and Apply
+### Step 4: Create Hardware Symlink
 
 ```bash
-# Test the new configuration
-./scripts/test-build.sh check
-
-# If on the new host, apply:
-sudo nixos-rebuild switch --flake ~/.config/nixme#new-host-name
+ln -s /etc/nixos/hardware-configuration.nix hosts/new-host-name/hardware-configuration.nix
 ```
 
 ---
@@ -392,42 +315,20 @@ sudo nixos-rebuild switch --flake ~/.config/nixme#new-host-name
 
 ### Automatic Maintenance
 
-The configuration includes automatic maintenance via `modules/nixos/core/nix-settings.nix`:
-
-#### Garbage Collection
-- **When**: Daily at 3:00 AM
-- **What**: Removes generations older than 7 days
-- **Why**: Prevents disk bloat while keeping recent generations for rollback
+From `modules/nixos/core/nix-settings.nix`:
 
 ```nix
-nix.gc = {
-  automatic = true;
-  dates = "03:00";
-  options = "--delete-older-than 7d";
-};
-```
+# Garbage Collection: Daily at 3 AM, keep 7 days
+nix.gc.automatic = true;
+nix.gc.dates = "03:00";
+nix.gc.options = "--delete-older-than 7d";
 
-#### Store Optimisation
-- **When**: Weekly
-- **What**: Deduplicates identical files via hardlinks
-- **Why**: Reduces disk usage significantly
+# Store Optimisation: Weekly
+nix.optimise.automatic = true;
+nix.optimise.dates = [ "weekly" ];
 
-```nix
-nix.optimise = {
-  automatic = true;
-  dates = [ "weekly" ];
-};
-```
-
-#### Auto-Optimise Store
-- **When**: Continuous (during builds)
-- **What**: Hard-links identical files as they're added
-- **Why**: Prevents duplication at build time
-
-```nix
-nix.extraOptions = ''
-  auto-optimise-store = true
-'';
+# Auto-optimise during builds
+nix.extraOptions = "auto-optimise-store = true";
 ```
 
 ### Manual Maintenance
@@ -436,194 +337,84 @@ nix.extraOptions = ''
 # Check disk usage
 du -sh /nix/store
 
-# List generations
-sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
-
-# Delete old generations (keep current + 3 previous)
+# Delete old generations
 sudo nix-collect-garbage --delete-older-than 3d
 
-# Full cleanup (removes all old generations)
+# Full cleanup
 sudo nix-collect-garbage -d
-
-# Optimise store manually
-sudo nix-store --optimise
 
 # Update flake.lock
 nix flake update
-
-# Update specific input
-nix flake lock --update-input home-manager
 ```
-
-### When to Run Manual GC
-
-- Before system upgrades (frees space)
-- When disk space is low
-- After large package changes (removes unused deps)
 
 ---
 
 ## Troubleshooting
 
-### Container Testing
-
-#### Test fails with "No such file or directory"
+### Container Testing Issues
 
 ```bash
-# Ensure you're in the repo root
+# Test fails: ensure in repo root
 cd ~/.config/nixme
 
-# Check file permissions
-ls -la scripts/test-build.sh
-
-# Should be executable (chmod +x if not)
-```
-
-#### Container won't start (Podman/Docker issues)
-
-```bash
 # Check Podman is installed
 podman --version
-
-# If using Docker, check it's running
-sudo systemctl status docker
-
-# SELinux issues: ensure :Z flag is present in mount
-# (already configured in test-build.sh)
-```
-
-#### Network issues in container
-
-The container needs internet to download Nix store paths. If behind a proxy:
-
-```bash
-# Set proxy for Podman
-export HTTP_PROXY=http://proxy:port
-export HTTPS_PROXY=http://proxy:port
-./scripts/test-build.sh check
 ```
 
 ### Build Failures
 
-#### Attribute not found
-
-```
-error: attribute 'packagename' missing
-```
-
-**Fix:** Search for correct package name:
-```bash
-# Search Nix packages
-nix search nixpkgs packagename
-
-# Or use search.nixos.org
-```
-
-#### Deprecated option
-
-```
-error: option 'old.option' is deprecated
-```
-
-**Fix:** Check release notes for new option path. Common deprecations:
-- `programs.git.extraConfig` → `programs.git.settings`
-- `services.xserver.displayManager.gdm` → `services.displayManager.gdm`
-
-#### Type mismatch
-
-```
-error: A definition for option 'X' is not of type 'Y'
-```
-
-**Fix:** Check option type in NixOS manual:
-- `attrsOf` expects attribute set
-- `listOf` expects list
-- `str` expects string (not path)
+| Error | Fix |
+|-------|-----|
+| `attribute missing` | `nix search nixpkgs packagename` |
+| `option deprecated` | Check release notes |
+| `type mismatch` | Check option type in manual |
 
 ### System Issues
 
-#### Boot failure after rebuild
-
-1. Reboot
-2. Select previous generation in GRUB
-3. Once booted, fix the configuration
-4. Test in container before rebuilding
-
-#### Home Manager fails to switch
-
 ```bash
-# Check for conflicts
-home-manager switch --flake .#stefan-hacks 2>&1 | less
+# Boot failure: use previous generation in GRUB
+# Or rollback:
+sudo nixos-rebuild switch --rollback
 
-# Common fix: remove conflicting files
-rm ~/.bashrc  # Let Home Manager manage it
-
-# Or allow Home Manager to backup
+# Home Manager conflicts:
 home-manager switch --flake .#stefan-hacks -b backup
-```
 
-#### Disk full
-
-```bash
-# Emergency cleanup
+# Disk full:
 sudo nix-collect-garbage -d --delete-older-than 1d
-
-# Check what's using space
-nix path-info -Sh /run/current-system | sort -k2 -h
-
-# Remove old home generations
-home-manager generations
-home-manager remove-generations +5  # Keep last 5
 ```
 
-### SSH Issues
+### Hardware Configuration Issues
 
-#### Can't SSH to VMs
+#### "Path not tracked by git" or "does not exist"
 
 ```bash
-# Check SSH config is loaded
-ssh -G kali-vm | grep port
+# Create the symlink:
+cd ~/.config/nixme
+ln -sf /etc/nixos/hardware-configuration.nix hosts/ghost/hardware-configuration.nix
 
-# Should show: port 2221
+# Verify:
+ls -la hosts/ghost/hardware-configuration.nix
 
-# Test connection with verbose output
-ssh -vvv kali-vm
-
-# Check if VM is running
-sudo virsh list --all
-# or for VirtualBox
-vboxmanage list runningvms
+# Rebuild:
+sudo nixos-rebuild switch --flake .#ghost
 ```
 
 ### Getting Help
 
 ```bash
-# Check NixOS manual
+# NixOS manual
 man configuration.nix
 
 # Search options
 nixos-option <option-name>
 
-# Get flake info
-nix flake metadata
-
-# Show what would be built
-nixos-rebuild dry-build --flake .#ghost
-
-# Trace evaluation for debugging
+# Debug evaluation
 nixos-rebuild switch --flake .#ghost --show-trace
 ```
 
 ---
 
 ## Summary
-
-This simplified NixOS configuration prioritizes:
-
-1. **Reliability**: Container testing prevents broken deployments
-2. **Clarity**: Direct paths, explicit definitions, no magic
-3. **Maintainability**: Daily GC, weekly optimisation, clear structure
-4. **Recoverability**: Multiple generations, rollback support
 
 **Key files to remember:**
 - Edit: `modules/nixos/` or `modules/home/` or `hosts/ghost/`
@@ -633,106 +424,14 @@ This simplified NixOS configuration prioritizes:
 **Never change:**
 - `system.stateVersion` (keep at "26.05")
 - `home.stateVersion` (keep at "26.05")
-- Input branches (nixos-26.05, release-26.05)
+- Input branches
 
 **Always do:**
+- Create hardware-configuration.nix symlink on first setup
 - Test in container before applying
 - Commit with descriptive messages
-- Push before applying to system
+- Push before applying
 
 ---
 
 *Configuration for Ghost laptop, maintained by stefan-hacks*
-
----
-
-## Appendix: VM Disk Space Troubleshooting
-
-### Problem: VM root filesystem full
-
-**Check disk usage:**
-```bash
-# See which filesystem is full
-df -h
-
-# Find large directories
-sudo -S -p '' du -sh /* 2>/dev/null | sort -hr | head -20
-sudo -S -p '' du -sh /var/* 2>/dev/null | sort -hr | head -10
-sudo -S -p '' du -sh /tmp/* 2>/dev/null | sort -hr | head -10
-```
-
-**Common culprits:**
-
-1. **Journal logs:**
-   ```bash
-   # Check log size
-   sudo -S -p '' journalctl --disk-usage
-   
-   # Clear old logs
-   sudo -S -p '' journalctl --vacuum-time=3d
-   ```
-
-2. **Nix store (if on same partition):**
-   ```bash
-   sudo -S -p '' nix-collect-garbage -d --delete-older-than 3d
-   ```
-
-3. **Temporary files:**
-   ```bash
-   sudo -S -p '' rm -rf /tmp/*
-   sudo -S -p '' rm -rf /var/tmp/*
-   ```
-
-4. **Package cache:**
-   ```bash
-   sudo -S -p '' rm -rf /var/cache/pacman/*  # If using Arch tools
-   sudo -S -p '' rm -rf /var/cache/apt/*     # If using Debian tools
-   ```
-
-### Solution 1: Clean Up (Quick)
-
-```bash
-# Aggressive cleanup
-sudo -S -p '' journalctl --vacuum-time=1d
-sudo -S -p '' nix-collect-garbage -d
-sudo -S -p '' rm -rf /tmp/* /var/tmp/*
-df -h  # Check if freed enough space
-```
-
-### Solution 2: Expand VM Disk (Recommended)
-
-If using **VirtualBox**:
-```bash
-# On host (Debian), shut down VM first
-VBoxManage modifyhd "path/to/disk.vdi" --resize 40960  # 40GB in MB
-# Then boot VM and expand partition
-```
-
-If using **QEMU/KVM**:
-```bash
-# On host, shut down VM first
-qemu-img resize "path/to/disk.qcow2" +20G
-# Then boot VM and expand partition
-```
-
-**Expand partition inside VM:**
-```bash
-# Check current partitions
-lsblk
-
-# Resize LVM if using LVM
-sudo -S -p '' pvresize /dev/sda3  # Adjust device
-sudo -S -p '' lvextend -l +100%FREE /dev/mapper/vg-root
-sudo -S -p '' resize2fs /
-
-# Or if just ext4 on partition (no LVM)
-sudo -S -p '' growpart /dev/sda 3  # Expand partition 3
-sudo -S -p '' resize2fs /dev/sda3
-```
-
-### Solution 3: Reinstall with Larger Disk
-
-If cleanup and resize don't work, reinstall the VM with:
-- **Minimum 40GB disk** (60GB+ recommended for NixOS)
-- **Dynamically allocated** (grows as needed)
-

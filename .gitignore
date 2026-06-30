@@ -31,3 +31,4 @@ hosts/*/hardware-configuration.nix
 
 # Logs
 *.log
+hosts/ghost/hardware-configuration.nix
