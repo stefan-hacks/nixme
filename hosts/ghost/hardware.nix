@@ -1,9 +1,11 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# HOSTS/GHOST/HARDWARE.NIX - Hardware Configuration
+# HOSTS/GHOST/HARDWARE.NIX - Hardware Configuration for Ghost Laptop
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# This file contains hardware-specific settings for the Ghost laptop.
-# Includes boot modules, kernel settings, hardware options, and filesystems.
+# Hardware-specific settings for Ghost laptop (Lenovo ThinkPad P1 Gen 4).
+# Uses: ext4 filesystem + LVM + LUKS encryption
+#
+# IMPORTANT: Update UUIDs after installation with: lsblk -f
 #
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -15,92 +17,87 @@
   ];
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # BOOT MODULES
+  # BOOT MODULES - For LUKS, LVM, and laptop hardware
   # ═══════════════════════════════════════════════════════════════════════════
   boot.initrd.availableKernelModules = [
-    "xhci_pci"
-    "thunderbolt"  # Thunderbolt support
-    "vmd"          # Intel Volume Management Device
-    "nvme"
-    "usbhid"
-    "usb_storage"
-    "sd_mod"
-    "dm_mod"       # Device mapper for LUKS
-    "cryptd"       # Crypto acceleration
-    "aesni_intel"  # Intel AES acceleration
+    "xhci_pci"        # USB 3.0
+    "thunderbolt"     # Thunderbolt support
+    "vmd"             # Intel Volume Management Device
+    "nvme"            # NVMe SSD
+    "usbhid"          # USB input devices
+    "usb_storage"     # USB storage
+    "sd_mod"          # SD card reader
+    "dm_mod"          # Device mapper (for LVM/LUKS)
+    "dm-raid"         # RAID support via device mapper
+    "cryptd"          # Crypto acceleration
+    "aesni_intel"     # Intel AES-NI acceleration
   ];
-  
-  boot.initrd.kernelModules = [ 
-    "dm-snapshot"  # For LVM snapshots
+
+  boot.initrd.kernelModules = [
+    "dm-snapshot"     # LVM snapshots
   ];
-  
-  boot.kernelModules = [ 
-    "kvm-intel"  # Intel virtualization
-    "btintel"    # Bluetooth
+
+  boot.kernelModules = [
+    "kvm-intel"       # Intel virtualization
+    "btintel"         # Bluetooth
   ];
-  
+
   boot.extraModulePackages = [ ];
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # FILESYSTEMS
-  # ═══════════════════════════════════════════════════════════════════════════
-  # Define your filesystems here. These were previously managed by disko.
-  # Update UUIDs to match your actual disk configuration.
-  #
-  # To find UUIDs: lsblk -f
-  #
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/CHANGE-ME";  # BTRFS root subvolume
-    fsType = "btrfs";
-    options = [ "subvol=@" "compress=zstd:1" "noatime" "discard=async" ];
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/CHANGE-ME";  # Same device as root
-    fsType = "btrfs";
-    options = [ "subvol=@home" "compress=zstd:1" "noatime" ];
-  };
-
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/CHANGE-ME";
-    fsType = "btrfs";
-    options = [ "subvol=@nix" "compress=zstd:1" "noatime" ];
-  };
-
-  fileSystems."/persist" = {
-    device = "/dev/disk/by-uuid/CHANGE-ME";
-    fsType = "btrfs";
-    options = [ "subvol=@persist" "compress=zstd:1" "noatime" ];
-  };
-
-  fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/CHANGE-ME";
-    fsType = "btrfs";
-    options = [ "subvol=@log" "compress=zstd:1" "noatime" ];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/CHANGE-ME-ESP";  # EFI partition
-    fsType = "vfat";
-    options = [ "fmask=0077" "dmask=0077" ];
-  };
 
   # ═══════════════════════════════════════════════════════════════════════════
   # LUKS ENCRYPTION
   # ═══════════════════════════════════════════════════════════════════════════
-  # If using LUKS encryption, configure it here:
-  # boot.initrd.luks.devices."cryptroot" = {
-  #   device = "/dev/disk/by-uuid/xxxxxx";
-  #   allowDiscards = true;      # Enable TRIM for SSD
-  #   bypassWorkqueues = true;     # Reduce latency
+  # LUKS container on the physical partition
+  boot.initrd.luks.devices."cryptroot" = {
+    device = "/dev/disk/by-uuid/LUKS-PARTITION-UUID";  # Replace with actual LUKS UUID
+    allowDiscards = true;      # Enable TRIM for SSD (security vs performance trade-off)
+    bypassWorkqueues = true;   # Reduce latency on SSDs
+  };
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # LVM CONFIGURATION
+  # ═══════════════════════════════════════════════════════════════════════════
+  # LVM volumes inside the decrypted LUKS container
+  # Adjust volume group and logical volume names to match your setup
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # FILESYSTEMS - ext4 on LVM
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Root filesystem on LVM logical volume
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/ROOT-UUID";  # ext4 root LV UUID
+    fsType = "ext4";
+    options = [ "noatime" "discard" ];  # SSD optimizations
+  };
+
+  # Boot partition (unencrypted EFI)
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/BOOT-UUID";  # EFI partition UUID
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" "uid=0" "gid=0" ];
+  };
+
+  # Home directory on separate LVM logical volume (optional)
+  # fileSystems."/home" = {
+  #   device = "/dev/disk/by-uuid/HOME-UUID";  # ext4 home LV UUID
+  #   fsType = "ext4";
+  #   options = [ "noatime" "discard" ];
   # };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # SWAP
+  # SWAP - Encrypted swap on LVM (or swapfile)
   # ═══════════════════════════════════════════════════════════════════════════
-  # Configure swap devices here
-  # swapDevices = [ 
-  #   { device = "/dev/disk/by-uuid/xxxxxx"; }  # swap partition
+  # Option 1: Dedicated swap LV
+  # swapDevices = [
+  #   { device = "/dev/disk/by-uuid/SWAP-UUID"; }  # swap LV UUID
+  # ];
+
+  # Option 2: Swapfile (create after boot)
+  # swapDevices = [
+  #   {
+  #     device = "/var/swapfile";
+  #     size = 16 * 1024;  # 16GB in MB
+  #   }
   # ];
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -108,17 +105,24 @@
   # ═══════════════════════════════════════════════════════════════════════════
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  # CPU microcode updates
+  # Intel CPU with microcode updates
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  # Power management
+  # Power management for laptop
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-  
-  # Enable redistributable firmware (for Wi-Fi, GPU, etc.)
+  powerManagement.enable = true;
+
+  # Enable redistributable firmware (Wi-Fi, GPU, etc.)
   hardware.enableRedistributableFirmware = lib.mkDefault true;
-  
-  # Graphics - Intel + NVIDIA hybrid (if applicable)
-  # services.xserver.videoDrivers = [ "nvidia" "intel" ];
-  # Or for Intel only:
-  # services.xserver.videoDrivers = [ "modesetting" ];
+
+  # Graphics - Intel integrated + optional NVIDIA
+  services.xserver.videoDrivers = lib.mkDefault [ "modesetting" ];  # Intel
+  # For hybrid graphics: [ "nvidia" "intel" ]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # VM TESTING NOTES
+  # ═══════════════════════════════════════════════════════════════════════════
+  # When testing in VM, temporarily comment out the LUKS section and
+  # update filesystem UUIDs to match the VM's ext4 partitions.
+  # See README.md for VM testing workflow.
 }
