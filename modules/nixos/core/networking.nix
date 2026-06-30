@@ -53,12 +53,12 @@
       80                # HTTP
       443               # HTTPS
       # ═══════════════════════════════════════════════════════════════════════
-      # VM SSH PORTS (4 Linux Distro VMs)
+      # VM SSH PORTS (4 Linux Distro VMs) - for SSH access to VirtualBox VMs
       # ═══════════════════════════════════════════════════════════════════════
-      # (const.vm-ssh-ports.kali-vm or 2221)      # Kali Linux VM
-      # (const.vm-ssh-ports.debian-vm or 2222)    # Debian VM
-      # (const.vm-ssh-ports.rocky-vm or 2223)     # Rocky Linux VM
-      # (const.vm-ssh-ports.nixos-vm or 2224)     # NixOS VM
+      2221              # Kali Linux VM
+      2222              # Debian VM
+      2223              # Rocky Linux VM
+      2224              # NixOS VM
       # ═══════════════════════════════════════════════════════════════════════
       # APPLICATION PORTS (Uncomment as needed)
       # ═══════════════════════════════════════════════════════════════════════
