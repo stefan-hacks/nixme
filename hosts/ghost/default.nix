@@ -11,9 +11,10 @@
 
 {
   imports = [
-    # Hardware configuration - imports directly from /etc/nixos/
-    # This uses a string path which works in pure evaluation mode
-    "/etc/nixos/hardware-configuration.nix"
+    # Hardware configuration - copy from /etc/nixos/hardware-configuration.nix
+    # Run this after installing NixOS:
+    #   cp /etc/nixos/hardware-configuration.nix hosts/ghost/
+    ./hardware-configuration.nix
   ];
   
   # ═══════════════════════════════════════════════════════════════════════════
