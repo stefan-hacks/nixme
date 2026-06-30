@@ -210,6 +210,13 @@
       gs = "git status";
       gl = "git log --oneline --graph";
       gd = "git diff";
+      
+      # SSH to VMs (convenience aliases)
+      sshkali = "ssh kali";
+      sshdebian = "ssh debian";
+      sshrocky = "ssh rocky";
+      sshnixos = "ssh nixos";
+      sshlin = "ssh lin";
     };
     
     # Bash prompt (simple, can customize later)
@@ -231,50 +238,105 @@
   };
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # ADDITIONAL PROGRAMS
+  # SSH CONFIGURATION
   # ═══════════════════════════════════════════════════════════════════════════
+  programs.ssh = {
+    enable = true;
+    
+    # Global settings for all hosts
+    extraOptionOverrides = {
+      ServerAliveInterval = "60";
+      ServerAliveCountMax = "3";
+      TCPKeepAlive = "yes";
+    };
+    
+    # Control master settings (connection multiplexing)
+    controlMaster = "auto";
+    controlPath = "~/.ssh/controlmasters/%r@%h:%p";
+    controlPersist = "10m";
+    
+    # Match blocks for specific hosts
+    matchBlocks = {
+      # Virtual Machines (all on localhost via port forwarding)
+      "kali" = {
+        hostname = "localhost";
+        user = "h4ck3r";
+        port = 2221;
+      };
+      
+      "debian" = {
+        hostname = "localhost";
+        user = "user1";
+        port = 2222;
+      };
+      
+      "rocky" = {
+        hostname = "localhost";
+        user = "user1";
+        port = 2223;
+      };
+      
+      "nixos" = {
+        hostname = "localhost";
+        user = "stefan-hacks";
+        port = 2224;
+      };
+      
+      # LIN AI - Remote machine
+      "lin" = {
+        hostname = "192.168.0.155";
+        user = "lin";
+        port = 22;
+      };
+      
+      # ═══════════════════════════════════════════════════════════════════════════
+      # ADDITIONAL HOST EXAMPLES (Commented)
+      # ═══════════════════════════════════════════════════════════════════════════
+      # "myserver" = {
+      #   hostname = "192.168.1.100";
+      #   user = "admin";
+      #   port = 22;
+      #   identityFile = "~/.ssh/id_ed25519";
+      #   # Or use specific key
+      #   # identityFile = "~/.ssh/myserver_key";
+      # };
+      #
+      # "github" = {
+      #   hostname = "github.com";
+      #   user = "git";
+      #   identityFile = "~/.ssh/github_ed25519";
+      # };
+      #
+      # "myserver-proxy" = {
+      #   hostname = "192.168.1.100";
+      #   user = "admin";
+      #   proxyJump = "bastion-host";
+      #   # Or use ProxyCommand
+      #   # extraOptions = {
+      #   #   ProxyCommand = "ssh -W %h:%p bastion-host";
+      #   # };
+      # };
+      #
+      # "myserver-tunnel" = {
+      #   hostname = "192.168.1.100";
+      #   user = "admin";
+      #   localForwards = [
+      #     { bind.port = 8080; host.address = "localhost"; host.port = 80; }
+      #   ];
+      #   remoteForwards = [
+      #     { bind.port = 9090; host.address = "localhost"; host.port = 9090; }
+      #   ];
+      # };
+    };
+  };
   
-  # Zellij terminal multiplexer
-  # programs.zellij = {
-  #   enable = true;
-  #   settings = {
-  #     theme = "catppuccin-mocha";
-  #   };
-  # };
-  
-  # Starship prompt (alternative to custom bash prompt)
-  # programs.starship = {
-  #   enable = true;
-  #   enableBashIntegration = true;
-  #   settings = {
-  #     # Starship configuration
-   #   };
-  # };
-  
-  # Direnv for directory-specific environments
-  # programs.direnv = {
-  #   enable = true;
-  #   enableBashIntegration = true;
-  #   nix-direnv.enable = true;
-  # };
-  
-  # Neovim (if you want to use it)
-  # programs.neovim = {
-  #   enable = true;
-  #   defaultEditor = true;
-  #   vimAlias = true;
-  # };
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # GNOME EXTENSIONS - Managed via Home Manager
-  # ═══════════════════════════════════════════════════════════════════════════
-  # Note: The GNOME Shell extensions configuration is in modules/home/desktop.nix
-  # This file can override or extend those settings for Ghost host.
-
   # ═══════════════════════════════════════════════════════════════════════════
   # FILE AND DIRECTORY SETUP
   # ═══════════════════════════════════════════════════════════════════════════
   home.file = {
+    # SSH controlmasters directory for connection multiplexing
+    ".ssh/controlmasters/.keep".text = "";
+    
     # Create common directories
     "Documents/.keep".text = "";
     "Downloads/.keep".text = "";
