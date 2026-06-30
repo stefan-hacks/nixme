@@ -22,31 +22,29 @@ This repository contains a minimal, focused NixOS setup designed for one purpose
 
 ## Hardware Configuration Setup
 
-### ⚠️ CRITICAL: Setup hardware-configuration.nix symlink
+### ⚠️ CRITICAL: `hardware-configuration.nix` MUST be a symlink
 
-This flake **requires** your actual hardware configuration. You must create a symlink or copy:
+The file `hosts/ghost/hardware-configuration.nix` **must** be a symlink to `/etc/nixos/hardware-configuration.nix`. This is **required** for the flake to work.
 
 ```bash
 # Navigate to the flake directory
 cd ~/.config/nixme
 
-# Option A: Create symlink (recommended for single laptop)
+# Create the symlink (REQUIRED)
 ln -sf /etc/nixos/hardware-configuration.nix hosts/ghost/hardware-configuration.nix
-
-# Option B: Copy the file (for CI or multiple machines)
-cp /etc/nixos/hardware-configuration.nix hosts/ghost/hardware-configuration.nix
 
 # Verify it exists
 ls -la hosts/ghost/hardware-configuration.nix
+# Should show: hardware-configuration.nix -> /etc/nixos/hardware-configuration.nix
 ```
 
-**Why this approach?**
-- ✅ No hardcoded paths in the flake
-- ✅ Always uses your current, correct hardware config
-- ✅ Works with flakes (no "not tracked by git" errors)
-- ✅ Can commit if needed (for CI or sharing)
+**Why a symlink?**
+- Uses your actual, working hardware configuration
+- Always up-to-date with your system
+- No manual copying of UUIDs needed
+- Works with flakes (file is gitignored)
 
-The file is gitignored (`hosts/*/hardware-configuration.nix`) so it won't be committed accidentally.
+**Note:** The file is gitignored and will NOT be committed to the repository.
 
 ---
 
@@ -149,8 +147,8 @@ nixme/
 ├── hosts/                       # Per-host configurations
 │   └── ghost/                   # Ghost laptop
 │       ├── default.nix          # System configuration imports
+│       ├── hardware-configuration.nix -> /etc/nixos/...  # SYMLINK: Must create manually!
 │       ├── hardware.nix         # Laptop-specific settings (CPU, power, graphics)
-│       ├── hardware-configuration.nix -> /etc/nixos/...  # SYMLINK (gitignored)
 │       └── home.nix             # User environment
 │
 ├── modules/
