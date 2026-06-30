@@ -11,13 +11,9 @@
 
 {
   imports = [
-    # Hardware configuration - can be:
-    # A) Symlink: ln -s /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
-    # B) Copied file: cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+    # Hardware configuration - MUST be a symlink to /etc/nixos/hardware-configuration.nix
+    # Create with: ln -sf /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
     ./hardware-configuration.nix
-
-    # Laptop-specific settings not in hardware-configuration.nix
-    ./hardware.nix
   ];
   
   # ═══════════════════════════════════════════════════════════════════════════

@@ -148,7 +148,6 @@ nixme/
 │   └── ghost/                   # Ghost laptop
 │       ├── default.nix          # System configuration imports
 │       ├── hardware-configuration.nix -> /etc/nixos/...  # SYMLINK: Must create manually!
-│       ├── hardware.nix         # Laptop-specific settings (CPU, power, graphics)
 │       └── home.nix             # User environment
 │
 ├── modules/
@@ -297,8 +296,7 @@ mkdir -p hosts/new-host-name
 ### Step 3: Create Required Files
 
 - `hosts/new-host-name/default.nix` - System config
-- `hosts/new-host-name/hardware.nix` - Laptop settings
-- `hosts/new-host-name/hardware-configuration.nix` - Symlink or copy
+- `hosts/new-host-name/hardware-configuration.nix` - Symlink (required)
 - `hosts/new-host-name/home.nix` - User config
 
 ### Step 4: Create Hardware Symlink
